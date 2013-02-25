@@ -3,7 +3,7 @@ App.populator('Perez1', function (page, article) {
     $(page).find('headline').clickable(); 
     $(page).find('#headline').text(article.head);
     $(page).find('#description').text(article.brief);
-
+    console.log(article['index']);
     // Replacing the default image with the article image
     var imgs = new Image();
     imgs.src = article.img;
@@ -12,8 +12,8 @@ App.populator('Perez1', function (page, article) {
     // Send the article via Kik
     $(page).find('#kik-it').on('click', function () {
       cards.kik.send({
-          title    : 'Message title'        ,
-          text     : 'Message body'         ,
+          title    : 'article.head'         ,
+          text     : 'article.brief'        ,
           pic      : imgs.src               ,
           big      : true                   ,       
       });
@@ -28,23 +28,27 @@ App.populator('Perez1', function (page, article) {
       cards.browser.open(article.link); 
     });
 
-    // Go to the "Next" article
-    $(page).find('#Next').on('click', function () {
-
-      //Check where you are in the page stack, if at the end "Next" becomes "Go Home"
-      var length = articleData.length; 
-      var len = length - 1;
-      if (article['index'] == len){
-        $(page).find('#Next').replaceWith('<div class="app-button">Back to First Story</div>');
-        
-        $(page).find('#Go Home').on('click', function () {
-          var index = 0;
-          App.load('Perez1', articleData[(article['index'])]);
-        });
-      }
-      else{
-      App.load('Perez1', articleData[(article['index'] + 1)]);
+    //Check where you are in the page stack, if at the end "Next" becomes "Go Home"
+    var length = articleData.length; 
+    var len = length - 1;
+    if (article['index'] == len){
+      $(page).find('#Next').replaceWith('<div class="app-button" id="home">Back to First Story</div>');
+      
+      $(page).find('#home').on('click', function () {
+        App.load('Perez1', articleData[0]);
+      });
     }
+
+    // Go to the "Next" article
+   
+      else{
+        $(page).find('#Next').on('click', function () {
+      App.load('Perez1', articleData[(article['index'] + 1)]);
+      });
+    }
+
+    MyAPI.ping('hi', function(str) {
+      console.log(str);
     });
 });
 
