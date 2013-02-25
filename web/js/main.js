@@ -1,43 +1,40 @@
 App.populator('Perez1', function (page, articleData) {
-  //for (var i=0; i<=2; i++) {
   var i=0;
-  var article = articleData[i];
-  $(page).find('headline').clickable(); 
-  $(page).find('#headline').text(article.head);
-  $(page).find('#description').text(article.brief);
+    var article = articleData[i];
+    $(page).find('headline').clickable(); 
+    $(page).find('#headline').text(article.head);
+    $(page).find('#description').text(article.brief);
 
-  var imgs= new Image();
-  imgs.src = article.img;
-  $(page).find('#image').replaceWith(imgs);
+    var imgs = new Image();
+    imgs.src = article.img;
+    $(page).find('#image').replaceWith(imgs);
 
-
-  // Send a Kik message
-  $(page).find('#kik-it').on('click', function () {
-    cards.kik.send({
-        title    : 'Message title'        ,
-        text     : 'Message body'         ,
-        pic      : imgs.src             ,
-        big      : true                   ,       
+    // Send a Kik message
+    $(page).find('#kik-it').on('click', function () {
+      cards.kik.send({
+          title    : 'Message title'        ,
+          text     : 'Message body'         ,
+          pic      : imgs.src               ,
+          big      : true                   ,       
+      });
     });
-  });
 
-  // Tapping headline/image goes to full article on perezhilton.com
-  $(page).find('#headline').on('click', function () {
-    cards.browser.open(article.link); 
-  });
+    // Tapping headline/image goes to full article on perezhilton.com
+    $(page).find('#headline').on('click', function () {
+      cards.browser.open(article.link); 
+    });
 
-  $(imgs).on('click', function () {
-    // Go to full article on perezhilton.com
-    cards.browser.open(article.link); 
-  });
+    $(imgs).on('click', function () {
+      // Go to full article on perezhilton.com
+      cards.browser.open(article.link); 
+    });
 
-  // Go to the "Next" page
-  $(page).find('#Next').on('click', function () {
-    // Go to next article
-    i++;
-    App.load('Perez1', articleData[i]);
-  });
-
+    // Go to the "Next" page
+    $(page).find('#Next').on('click', function () {
+      // Go to next article
+      i=1;
+      App.load('Perez1', articleData);
+    });
 });
 
 var articleData = [
@@ -63,9 +60,9 @@ var articleData = [
 
 App.load('Perez1', articleData);
 
-App.populator('Perez2', function (page) {
-  // put stuff here
-  //$(page).find('#description' ).text(article.descript);
+App.populator('Perez2', function (page, articleData) {
+
+  App.load('Perez1', articleData);
 });
 
 try {
