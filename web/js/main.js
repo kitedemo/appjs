@@ -1,36 +1,40 @@
 App.populator('Perez1', function (page, articleData) {
-  $(page).find('headline').clickable();
-  $(page).find('#headline').text(articleData[0].head);
-  $(page).find('#description').text(articleData[0].brief);
+  var i=1;
+  var article = articleData[i];
+  $(page).find('headline').clickable(); 
+  $(page).find('#headline').text(article.head);
+  $(page).find('#description').text(article.brief);
 
-  var $images = articleData[1].img;
-  var $newImage = $('<div class="image"></div>');
-  $(page).find('#image').replaceWith($images);
+  var imgs= new Image();
+  imgs.src = article.img;
+  $(page).find('#image').replaceWith(imgs);
+
 
   // Send a Kik message
   $(page).find('#kik-it').on('click', function () {
     cards.kik.send({
         title    : 'Message title'        ,
         text     : 'Message body'         ,
-        pic      : 'img/p1.jpg'            ,
+        pic      : imgs.src             ,
         big      : true                   ,       
     });
   });
 
   // Tapping headline/image goes to full article on perezhilton.com
   $(page).find('#headline').on('click', function () {
-    cards.browser.open('http://www.google.com'); 
+    cards.browser.open(article.link); 
   });
 
   $(page).find('#myImage').on('click', function () {
     // Go to full article on perezhilton.com
-    cards.browser.open('http://perezhilton.com/2013-02-21-taylor-swift-tom-odell-dating-sighting-london-pub-brit-awards-harry-styles-one-direction/?from=topstory_perezhilton'); 
+    cards.browser.open(article.link); 
   });
 
   // Go to the "Next" page
   $(page).find('#Next').on('click', function () {
     // Go to next article
-    App.load('Perez1', articleData[1]);
+    i++;
+    App.load('Perez1', articleData[i]);
   });
 
 });
@@ -55,7 +59,6 @@ var articleData = [
     link: 'www.perezhilton.com/3',
   },
 ];
-var images = ['img/p1.jpg', 'img/p2.png', 'img/p3.png'];
 
 App.load('Perez1', articleData);
 
