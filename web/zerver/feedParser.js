@@ -1,8 +1,3 @@
-exports.ping = function (str, callback) {
-	console.log(str);
-	callback('ping from server');
-};
-
 function init () {
   var fp       = require('../../node_modules/feedparser'),
       Promise  = require('../../node_modules/rsvp').Promise,

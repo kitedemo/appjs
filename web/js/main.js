@@ -1,5 +1,9 @@
 
 App.populator('Perez1', function (page, article) {
+  feedParser.getArticles(function (articles){
+    console.log(articles);
+  });
+
     $(page).find('headline').clickable(); 
     $(page).find('#headline').text(article.head);
     $(page).find('#description').text(article.brief);
@@ -31,7 +35,7 @@ App.populator('Perez1', function (page, article) {
     //Check where you are in the page stack, if at the end "Next" becomes "Go Home"
     var length = articleData.length; 
     var len = length - 1;
-    if (article['index'] == len){
+    if (article['index'] === len){
       $(page).find('#Next').replaceWith('<div class="app-button" id="home">Back to First Story</div>');
       
       $(page).find('#home').on('click', function () {
@@ -47,9 +51,6 @@ App.populator('Perez1', function (page, article) {
       });
     }
 
-    MyAPI.ping('hi', function(str) {
-      console.log(str);
-    });
 });
 
 var articleData = [
