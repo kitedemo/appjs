@@ -1,9 +1,10 @@
 App.populator('Perez1', function (page, articleData) {
-  var i=1;
+  //for (var i=0; i<=2; i++) {
+  var i=0;
   var article = articleData[i];
   $(page).find('headline').clickable(); 
   $(page).find('#headline').text(article.head);
-  $(page).find('#description').text(article.brief);
+  $(page).find('#description').text(article.link);
 
   var imgs= new Image();
   imgs.src = article.img;
@@ -25,7 +26,7 @@ App.populator('Perez1', function (page, articleData) {
     cards.browser.open(article.link); 
   });
 
-  $(page).find('#myImage').on('click', function () {
+  $(imgs).on('click', function () {
     // Go to full article on perezhilton.com
     cards.browser.open(article.link); 
   });
@@ -44,20 +45,20 @@ var articleData = [
     head: 'Headline1',
     img: 'img/p1.jpg',
     brief: 'Description for headline1',
-    link: 'www.perezhilton.com/1',
+    link: 'http://www.perezhilton.com/',
   },
   {
     head: 'Headline2',
     img: 'img/p2.jpg',
     brief: 'Description for headline2',
-    link: 'www.perezhilton.com/2',
+    link: 'http://www.perezhilton.com/',
   },
   {
     head: 'Headline3',
     img: 'img/p3.jpg',
     brief: 'Description for headline3',
-    link: 'www.perezhilton.com/3',
-  },
+    link: 'http://www.perezhilton.com/',
+  }
 ];
 
 App.load('Perez1', articleData);
