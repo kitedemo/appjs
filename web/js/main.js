@@ -4,7 +4,7 @@ App.populator('Perez1', function (page, articleData) {
   var article = articleData[i];
   $(page).find('headline').clickable(); 
   $(page).find('#headline').text(article.head);
-  $(page).find('#description').text(article.link);
+  $(page).find('#description').text(article.brief);
 
   var imgs= new Image();
   imgs.src = article.img;
