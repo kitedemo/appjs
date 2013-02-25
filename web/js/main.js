@@ -42,10 +42,10 @@ App.populator('Perez1', function (page, articleData) {
 
 var articleData = [
   {
-    head: 'Headline1',
+    head: 'Taylor Swift Dating Brit Award Winner Tom Odell!? See PICS Of Their First Night Together HERE!',
     img: 'img/p1.jpg',
-    brief: 'Description for headline1',
-    link: 'http://www.perezhilton.com/',
+    brief: 'Hold on to your hat, Harry Styles — the man-eating Princess of Pop is hungry for a new young British boy! Taylor Swift was seen at Groucho Club in London Thursday night with Britains rising star, Tom Odell! The two even got tipsy at an authentic English pub beforehand! Swifty dazzled on stage yesterday, but this snagging this guy was her most impressive move of the week! She didnt win a Brit Award… So she took home the 22-year-old singer-songwriter who did! HA! Tom won the Critics Choice award last night and, judging by how cozy these two looked together, he mightve gotten even luckier later on in the evening!! We shouldve known these two were trouble when they walked in getting together after his ah-mazing rendition of her smash single went viral!',
+    link: 'http://perezhilton.com/2013-02-21-taylor-swift-tom-odell-dating-sighting-london-pub-brit-awards-harry-styles-one-direction/?from=topstory_perezhilton',
   },
   {
     head: 'Headline2',
