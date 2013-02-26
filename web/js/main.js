@@ -3,7 +3,6 @@ App.populator('Perez1', function (page, article) {
 
   //Pull in content from PerezHilton.com
   feedParser.getArticles(function (articles){
-    console.log(articles);
     articleData = articles;
     index = articleData[index].index; 
     addContent();
@@ -48,30 +47,33 @@ App.populator('Perez1', function (page, article) {
     if (articleData[index].index === 0){
       $(page).find('#Back').remove(); 
     }
-    else{
-      //ASK JAIRAJ WHY THIS DOESN'T WORK should be data-back
-      $(page).find('#Back').on('click', function () {
-        //This will automatically go to the previous page if "back" is clicked
-      });
-    }
-    //If at the 10th article "Next" becomes "Go Home"
+
+    //If at the 10th article "Next" becomes "Go Home" returns to article 0
     var length = articleData.length; 
     var len = length - 1;
     if (articleData[index].index === len){
-      $(page).find('#Next').replaceWith('<div class="app-button" id="home">Back to First Story</div>');
+      $(page).find('#Next').remove(); 
+      $(page).find('#Back').replaceWith('<div class="app-button" id="home">New Stories</div>');
       
+      index = 0;
+      console.log(index);
       $(page).find('#home').on('click', function () {
-        index=0;
         App.load('Perez1', articleData[index]);
       });
     }
 
-    // Otherwise go to the next article
     else{
+      // Otherwise go to the next article
       $(page).find('#Next').on('click', function () {
         index++;
+        console.log(index);
         App.load('Perez1', articleData[index]);
-    });
+      });
+
+      //Otherwise handle "back"
+      $(page).find('#Back').on('click', function () {
+        //This will automatically go to the previous page if "back" is clicked
+      });
     }
   }
 });
