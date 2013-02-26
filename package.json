@@ -8,6 +8,6 @@
   "dependencies" : {
     "zerver" : "0.7.14",
     "feedparser" : "0.13.2", 
-    "rsvp" : "0.0.1"
+    "rsvp" : "1.2.0"
   }
 }
