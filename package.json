@@ -7,7 +7,6 @@
   },
   "dependencies" : {
     "zerver" : ">=0.6.11"
-    "../../node_modules/feedparser" : ">=0.13.2"
-    "../../node_modules/rsvp" : ""
+    "feedparser" : ">=0.13.2"
   }
 }
