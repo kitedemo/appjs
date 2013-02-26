@@ -9,41 +9,47 @@
   </head>
 
   <body>
-    <!-- App Details -->
     <div class="app-page" data-page="Perez1">
+      <!-- Nav Bar -->
       <div class="app-topbar">
         <div class="app-title" id = "title">Have You Heard?</div>
         <div class="app-button right" id="Next" >Next</div>
         <div class="app-button left" id="Back" data-back="true">Back</div>
       </div>
-
+      <!-- Article Information -->
       <div class="app-content">
-      <!-- Headline -->
+        <div class="app-section">
+          <h3 id ="headline" style="padding: 5px;">Loading New Headline!</h3>
+          <img src ="img/perez.jpg" width="100%" id = "image" style="display:block">
+          <p id="story" style="padding: 5px;"></p>
+        </div>
+        <!-- Kik Article -->
+        <div class="app-section">
+          <div class="app-button" id="kik-it" >Kik This Story! </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Page 2 -->
+  <div class="app-page" data-page="PerezViewer">
+    <!-- Nav Bar -->
+    <div class="app-topbar">
+      <div class="app-title" id = "title">Have You Heard?</div>
+      <div class="app-button left" id ="home">New Stories</div>
+    </div>
+    <!-- Content Area -->
+    <div class="app-content">
       <div class="app-section">
         <h3 id ="headline" style="padding: 5px;">Loading New Headline!</h3>
         <img src ="img/perez.jpg" width="100%" id = "image" style="display:block">
-      <!-- Description -->
         <p id="story" style="padding: 5px;"></p>
       </div>
-
       <!-- Kik Article -->
       <div class="app-section">
-      <div class="app-button" id="kik-it" >Kik This Story! </div>
+        <div class="app-button" id="kik-it" >Kik This Story! </div>
       </div>
-  </div>
-
-  <!-- Page 2 If needed? -->
-  <div class="app-page" data-page="PerezPreview">
-    <div class="app-topbar">
-      <div class="app-button left" data-back="true">Back</div>
-      <div class="app-title">Next Page</div>
-    </div>
-    <div class="app-content">
-      <div class="app-section">
-        Go to perezhilton.com
     </div>
   </div>
-
 
   <!-- Scripts -->  
   <script src="http://cdn.kik.com/cards/0/cards.js"></script>

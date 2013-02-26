@@ -1,3 +1,6 @@
+// Defining some global variables
+var articleData = [];
+var index = 0;
 
 App.populator('Perez1', function (page, article) {
 
@@ -9,7 +12,7 @@ App.populator('Perez1', function (page, article) {
   });
 
   var addContent = function () {
-    $(page).find('headline').clickable(); 
+    $(page).find('#headline').clickable(); 
     $(page).find('#headline').text(articleData[index].title);
     $(page).find('#story').append(articleData[index].content);
   
@@ -17,21 +20,6 @@ App.populator('Perez1', function (page, article) {
     // var imgs = new Image();
     // imgs.src = article.img;
     // $(page).find('#image').replaceWith(imgs);
-
-    // Send the article via Kik
-    $(page).find('#kik-it').on('click', function () {
-      //Removing the HTML from the brief description
-      var artBrief = articleData[index].description;
-      var foobar = $('<div />').html(artBrief);
-      var summary = foobar.find('p').text() || artBrief;
-
-      cards.kik.send({
-          title    : articleData[index].title        ,
-          text     : summary                        ,
-          pic      : 'img/perez.jpg'                 ,
-          big      : false                           ,       
-      });
-    });
 
     // Tapping headline goes to full article on perezhilton.com
     $(page).find('#headline').on('click', function () {
@@ -56,7 +44,6 @@ App.populator('Perez1', function (page, article) {
       $(page).find('#Back').replaceWith('<div class="app-button" id="home">New Stories</div>');
       
       index = 0;
-      console.log(index);
       $(page).find('#home').on('click', function () {
         App.load('Perez1', articleData[index]);
       });
@@ -75,24 +62,69 @@ App.populator('Perez1', function (page, article) {
         //This will automatically go to the previous page if "back" is clicked
       });
     }
+
+    // Send the article via Kik
+    $(page).find('#kik-it').on('click', function () {
+      //Removing the HTML from the brief description
+      var brief = articleData[index].description;
+      var foobar = $('<div />').html(brief);
+      var summary = foobar.find('p').text() || brief;
+
+      var x = JSON.stringify(articleData[index]);
+
+      cards.kik.send({
+        title    : articleData[index].title        ,
+        text     : summary                         ,
+        pic      : 'img/perez.jpg'                 ,
+        big      : false                           , 
+        linkData : x 
+      });
+    });
   }
 });
 
-// Defining some global variables
-var articleData = [];
-var index = 0;
-
-// First app.load
-App.load('Perez1', articleData[0]);
-
 // For the future "preview" page
-App.populator('PerezPreview', function (page, articleData) {
+App.populator('PerezViewer', function (page, linkData) {
   //App.load('Perez1', articleData);
+  $(page).find('#headline').clickable(); 
+  $(page).find('#headline').text(linkData.title);
+  $(page).find('#story').append(linkData.content);
+
+  index=0;
+  $(page).find('#home').on('click', function () {
+    App.load('Perez1', articleData[0]);
+  });
+
+  // Tapping headline goes to full article on perezhilton.com
+  $(page).find('#headline').on('click', function () {
+    cards.browser.open(articleData[index].link); 
+  });
+
+  // Send the article via Kik
+  $(page).find('#kik-it').on('click', function () {
+    //Removing the HTML from the brief description
+    var brief = linkData.description;
+    var foobar = $('<div />').html(brief);
+    var summary = foobar.find('p').text() || brief;
+
+    var y = JSON.stringify(linkData);
+
+    cards.kik.send({
+      title    : linkData.title        ,
+      text     : summary                         ,
+      pic      : 'img/perez.jpg'                 ,
+      big      : false                           , 
+      linkData : y
+    });
+  });
+
 });
 
-try {
-  App.restore();
-}
-catch (err) {
-  //App.load('home');
+if (cards.browser && cards.browser.linkData) {
+  // Card was launched by a conversation
+  //var articleData = JSON.parse(cards.browser.linkData);
+  App.load('PerezViewer', cards.browser.linkData);
+
+}else {
+  App.load('Perez1', articleData[0]);
 }
