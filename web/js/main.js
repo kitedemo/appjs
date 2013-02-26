@@ -21,11 +21,16 @@ App.populator('Perez1', function (page, article) {
 
     // Send the article via Kik
     $(page).find('#kik-it').on('click', function () {
+      //Removing the HTML from the brief description
+      var artBrief = articleData[index].description;
+      var foobar = $('<div />').html(artBrief);
+      var summary = foobar.find('p').text() || artBrief;
+
       cards.kik.send({
           title    : articleData[index].title        ,
-          text     : articleData[index].content       ,
-          pic      : 'img/p1.jpg'               ,
-          big      : false                   ,       
+          text     : summary                        ,
+          pic      : 'img/perez.jpg'                 ,
+          big      : false                           ,       
       });
     });
 

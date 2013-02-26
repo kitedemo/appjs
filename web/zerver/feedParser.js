@@ -12,6 +12,9 @@ function init () {
     obj.title   = article['title'];
     obj.content = article['description'];
     obj.link    = article['link'];
+    obj.description = article['rss:description']['#'];
+
+    obj.content = obj.content.replace(/\<p[^>]*\>\<object[^>]*\>[^<]*\<\/object\>\<\/p\>/, '');
     
     articles.push(obj);
 
