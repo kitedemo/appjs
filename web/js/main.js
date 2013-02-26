@@ -18,11 +18,11 @@ App.populator('Perez1', function (page, article) {
     $(page).find('#headline').text(articleData[index].title);
     
     // Create article body and image
-    var temp = $('<div />').html(articleData[index].content);
-    var img = temp.find('img');
+    var descr = $('<div />').html(articleData[index].content);
+    var img = descr.find('img');
     $(page).find('#image').clickable(); 
     $(page).find('#image').replaceWith(img);
-    $(page).find('#story').append(temp);
+    $(page).find('#story').append(descr);
 
     // Tapping headline and image goes to full article on perezhilton.com
     $(page).find('#headline').on('click', function (){
