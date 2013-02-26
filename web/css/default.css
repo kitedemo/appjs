@@ -358,11 +358,6 @@ p {
 	text-align: left;
 	margin-top: 15px;
 }
-#myCanvas {
-	border-radius: 15px;
-	max-width: 95%;
-
-}
 #myImage{
 	border-radius: 3px;
 	max-width: 100%;

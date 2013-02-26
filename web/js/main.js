@@ -13,22 +13,29 @@ App.populator('Perez1', function (page, article) {
   });
 
   var addContent = function () {
-    // Create article title
-    $(page).find('#headline').clickable(); 
-    $(page).find('#headline').text(articleData[index].title);
-    
+    // Create article title (.html removes the weird #038 in titles)
+    $(page).find('#headline').html(articleData[index].title);
+
     // Create article body and image
     var descr = $('<div />').html(articleData[index].content);
     var img = descr.find('img');
-    $(page).find('#image').clickable(); 
+    //Adjusts images to 100% width
+    img.css('width', '100%');
     $(page).find('#image').replaceWith(img);
     $(page).find('#story').append(descr);
 
+    //On iphones they don't handle URLS in the description
+    //This will ensure they work
+    $(page).find('#story a').click(function (e) {
+      e.preventDefault();
+      cards.browser.open(this.href);
+    });
+
     // Tapping headline and image goes to full article on perezhilton.com
-    $(page).find('#headline').on('click', function (){
+    $(page).find('#headline').clickable().on('click', function (){
       cards.browser.open(articleData[index].link); 
     });
-    $(img).on('click', function () {
+    $(img).clickable().on('click', function () {
       cards.browser.open(articleData[index].link); 
     });
 
@@ -41,12 +48,11 @@ App.populator('Perez1', function (page, article) {
     var length = articleData.length; 
     var len = length - 1;
     if (articleData[index].index === len){
-      $(page).find('#Next').remove(); 
-      $(page).find('#Back').replaceWith('<div class="app-button" id="home">New Stories</div>');
+      $(page).find('#Next').replaceWith('<div class="app-button right" id="home">New Stories</div>');
       
-      index = 0;
+      //index = 0;
       $(page).find('#home').on('click', function () {
-        App.load('Perez1', articleData[index]);
+        App.load('Perez1', articleData[0]);
       });
     }
 
@@ -71,12 +77,14 @@ App.populator('Perez1', function (page, article) {
       var foobar = $('<div />').html(brief);
       var summary = foobar.find('p').text() || brief;
 
+      var imgURL = img.attr('src');
+
       var x = JSON.stringify(articleData[index]);
 
       cards.kik.send({
         title    : articleData[index].title        ,
         text     : summary                         ,
-        pic      : 'img/perez.jpg'                 ,
+        pic      : imgURL                          ,
         big      : false                           , 
         linkData : x 
       });
@@ -88,7 +96,7 @@ App.populator('Perez1', function (page, article) {
 App.populator('PerezViewer', function (page, linkData) {
   //App.load('Perez1', articleData);
   $(page).find('#headline').clickable(); 
-  $(page).find('#headline').text(linkData.title);
+  $(page).find('#headline').html(linkData.title);
   $(page).find('#story').append(linkData.content);
 
   index=0;
