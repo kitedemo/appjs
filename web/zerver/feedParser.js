@@ -1,5 +1,5 @@
 function init () {
-  var fp       = require('feedParser'),
+  var fp       = require('feedparser'),
       Promise  = require('rsvp').Promise,
       promise  = new Promise(),
       articles = [],
