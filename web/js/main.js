@@ -39,14 +39,14 @@ App.populator('Perez1', function (page, article) {
     //   cards.browser.open(articleData[index].link); 
     // });
 
-    // Add the "Back" button if it isn't the first article in the list
-    if (articleData[index].index !== 0){
-      $(page).find('#title').append('<div class="app-button left" id="Back" data-back="true">Back</div>'); 
-
+    // If on the first article in the list, remove "Back" button
+    if (articleData[index].index === 0){
+      $(page).find('#Back').remove(); 
+    }
+    else{
       //ASK JAIRAJ WHY THIS DOESN'T WORK should be data-back
       $(page).find('#Back').on('click', function () {
         //This will automatically go to the previous page if "back" is clicked
-        console.log('test');
       });
     }
     //If at the 10th article "Next" becomes "Go Home"
