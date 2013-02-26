@@ -4,6 +4,7 @@ function init () {
       promise  = new Promise(),
       articles = [],
       index    = 0;
+      //img = '';
 
   function add (article) {
     // Make an Article object, add it to an array
@@ -12,9 +13,12 @@ function init () {
     obj.title   = article['title'];
     obj.content = article['description'];
     obj.link    = article['link'];
-    obj.description = article['rss:description']['#'];
+    obj.description = article['summary'];
 
-    obj.content = obj.content.replace(/\<p[^>]*\>\<object[^>]*\>[^<]*\<\/object\>\<\/p\>/, '');
+    obj.content = obj.content.replace(/\<p[^>]*\>\<object[^>]*\>[^\<]\<\/object\>\<\/p\>/, '');
+    // This is to remove <script> tags from the HTML (ie. perez.videoplayer)
+    // See http://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
+    obj.content = obj.content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
     
     articles.push(obj);
 
@@ -25,7 +29,7 @@ function init () {
     }
   }
 
-  fp.parseUrl('http://i.perezhilton.com/?feed=rss2').on('article', add);
+  fp.parseUrl('http://i.perezhilton.com/?feed=atom').on('article', add);
 
   return promise;
 }

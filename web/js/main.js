@@ -6,30 +6,31 @@ App.populator('Perez1', function (page, article) {
 
   //Pull in content from PerezHilton.com
   feedParser.getArticles(function (articles){
+    console.log(articles);
     articleData = articles;
     index = articleData[index].index; 
     addContent();
   });
 
   var addContent = function () {
+    // Create article title
     $(page).find('#headline').clickable(); 
     $(page).find('#headline').text(articleData[index].title);
-    $(page).find('#story').append(articleData[index].content);
-  
-    // Replacing the default image with the article image
-    // var imgs = new Image();
-    // imgs.src = article.img;
-    // $(page).find('#image').replaceWith(imgs);
+    
+    // Create article body and image
+    var temp = $('<div />').html(articleData[index].content);
+    var img = temp.find('img');
+    $(page).find('#image').clickable(); 
+    $(page).find('#image').replaceWith(img);
+    $(page).find('#story').append(temp);
 
-    // Tapping headline goes to full article on perezhilton.com
-    $(page).find('#headline').on('click', function () {
+    // Tapping headline and image goes to full article on perezhilton.com
+    $(page).find('#headline').on('click', function (){
       cards.browser.open(articleData[index].link); 
     });
-
-    // Tapping image also goes to full article on perezhilton.com
-    // $(imgs).on('click', function () {
-    //   cards.browser.open(articleData[index].link); 
-    // });
+    $(img).on('click', function () {
+      cards.browser.open(articleData[index].link); 
+    });
 
     // If on the first article in the list, remove "Back" button
     if (articleData[index].index === 0){
