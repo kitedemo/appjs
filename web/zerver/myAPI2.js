@@ -2,23 +2,17 @@ function init () {
   var fp       = require('../../node_modules/feedParser'),
       Promise  = require('../../node_modules/rsvp').Promise,
       promise  = new Promise(),
-      articles = [],
-      index    = 0;
+      articles = [];
 
   function add (article) {
-    // Make an Article object, add it to an array
+    // make an article object, add it to an array
     var obj     = {};
-    obj.index   = index;
     obj.title   = article['title'];
     obj.content = article['description'];
     obj.link    = article['link'];
-    
     articles.push(obj);
-
-    index++;
-
     if( articles.length === 10 ){
-      promise.resolve(articles);
+      promise.resolve(this.articles);
     }
   }
 
