@@ -105,10 +105,10 @@ html,body,div,form,p,ul,li,span,label,img{margin:0;padding:0;outline:0}html,body
 	font-size: 20px;
 }
 .app-android .app-title {
-	float: left;
+	float: center;
 	padding: 0 12px 0 24px;
 	width: auto;
-	text-align: left;
+	text-align: center;
 }
 .app-android .app-topbar .app-button[data-back].active ~ .app-title {
 	background: #3C3C3C;
@@ -135,6 +135,7 @@ html,body,div,form,p,ul,li,span,label,img{margin:0;padding:0;outline:0}html,body
 	background-color: transparent;
 }
 .app-ios .app-topbar .app-button {
+	/*
 	margin: 7px 5px;
 	padding: 0 10px;
 	height: 28px;
@@ -156,8 +157,12 @@ html,body,div,form,p,ul,li,span,label,img{margin:0;padding:0;outline:0}html,body
 	border-radius: 6px;
 	font-size: 14px;
 	line-height: 28px;
+	*/
+	background-color: transparent
 }
+
 .app-ios .app-topbar .app-button.active {
+	/*
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#2F2F2F), to(#0D0D0D));
 	background-image: -webkit-linear-gradient(top, #2F2F2F, #0D0D0D);
 	background-image: -moz-linear-gradient(top, #2F2F2F, #0D0D0D);
@@ -171,6 +176,8 @@ html,body,div,form,p,ul,li,span,label,img{margin:0;padding:0;outline:0}html,body
 	box-shadow: 0 1px 1px rgba(255,255,255,0.1),
 		inset 0 0 3px rgba(0,0,0,0.4);
 	color: #EE1289;
+	*/
+	background-color: transparent
 }
 
 
