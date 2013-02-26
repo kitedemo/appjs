@@ -1,6 +1,6 @@
 function init () {
-  var fp       = require('../../node_modules/feedParser'),
-      Promise  = require('../../node_modules/rsvp').Promise,
+  var fp       = require('feedParser'),
+      Promise  = require('rsvp').Promise,
       promise  = new Promise(),
       articles = [],
       index    = 0;
