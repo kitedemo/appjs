@@ -48,11 +48,11 @@ App.populator('Perez1', function (page, article) {
     var length = articleData.length; 
     var len = length - 1;
     if (articleData[index].index === len){
-      $(page).find('#Next').replaceWith('<div class="app-button right" id="home">New Stories</div>');
+      $(page).find('#Next').text('Home');
       
-      //index = 0;
-      $(page).find('#home').on('click', function () {
-        App.load('Perez1', articleData[0]);
+      $(page).find('#Next').on('click', function () {
+        index=0;
+        App.load('Perez1', articleData[index]);
       });
     }
 
