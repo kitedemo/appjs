@@ -6,26 +6,21 @@ App.populator('Perez1', function (page, article) {
 
   //Pull in content from PerezHilton.com
   feedParser.getArticles(function (articles){
-    console.log(articles);
     articleData = articles;
     index = articleData[index].index; 
     addContent();
   });
 
   var addContent = function () {
-    // Create article title (.html removes the weird #038 in titles)
-    $(page).find('#headline').html(articleData[index].title);
-
-    // Create article body and image
+    // Creates the article
+    $(page).find('#headline').html(articleData[index].title); //.html removes the weird &#038 from headlines
     var descr = $('<div />').html(articleData[index].content);
     var img = descr.find('img');
-    //Adjusts images to 100% width
-    img.css('width', '100%');
+    img.css('width', '100%'); //Adjusts images to 100% width
     $(page).find('#image').replaceWith(img);
     $(page).find('#story').append(descr);
 
-    //On iphones they don't handle URLS in the description
-    //This will ensure they work
+    //iPhones don't handle URLS in the description, this will ensure they work
     $(page).find('#story a').click(function (e) {
       e.preventDefault();
       cards.browser.open(this.href);
@@ -44,12 +39,11 @@ App.populator('Perez1', function (page, article) {
       $(page).find('#Back').remove(); 
     }
 
-    //If at the 10th article "Next" becomes "Go Home" returns to article 0
+    //If at the 10th article "Next" becomes "Go Home" and returns to article 0
     var length = articleData.length; 
     var len = length - 1;
     if (articleData[index].index === len){
-      $(page).find('#Next').text('Home');
-      
+      $(page).find('#Next').text('Home');    
       $(page).find('#Next').on('click', function () {
         index=0;
         App.load('Perez1', articleData[index]);
@@ -57,14 +51,13 @@ App.populator('Perez1', function (page, article) {
     }
 
     else{
-      // Otherwise go to the next article
+      // Go to the next article
       $(page).find('#Next').on('click', function () {
         index++;
         console.log(index);
         App.load('Perez1', articleData[index]);
       });
-
-      //Otherwise handle "back"
+      //Handle "back"
       $(page).find('#Back').on('click', function () {
         //This will automatically go to the previous page if "back" is clicked
       });
@@ -72,17 +65,18 @@ App.populator('Perez1', function (page, article) {
 
     // Send the article via Kik
     $(page).find('#kik-it').on('click', function () {
-      //Removing the HTML from the brief description
+      //.html removes the weird &#038 from headlines, but needs to be a string so text
+      var betterTitle = $('<div />').html(articleData[index].title).text();
+      //Similarily need to removing the HTML from the brief description
       var brief = articleData[index].description;
       var foobar = $('<div />').html(brief);
       var summary = foobar.find('p').text() || brief;
-
+      //Change the img to the img URL
       var imgURL = img.attr('src');
-
       var x = JSON.stringify(articleData[index]);
 
       cards.kik.send({
-        title    : articleData[index].title        ,
+        title    : betterTitle                     ,
         text     : summary                         ,
         pic      : imgURL                          ,
         big      : false                           , 
@@ -92,12 +86,17 @@ App.populator('Perez1', function (page, article) {
   }
 });
 
-// Perez Viewer, if opened from a Kik and the article may not be in the top 10
+// Perez Viewer
+// If opened from a Kik message the article may not be in the top 10
+// This should not depend on index for positioning
 App.populator('PerezViewer', function (page, linkData) {
-  //App.load('Perez1', articleData);
-  //$(page).find('#headline').clickable(); 
+  //Create the article
   $(page).find('#headline').html(linkData.title);
-  $(page).find('#story').append(linkData.content);
+  var descr = $('<div />').html(linkData.content);
+  var img = descr.find('img');
+  img.css('width', '100%');  //Adjusts images to 100% width
+  $(page).find('#image').replaceWith(img);
+  $(page).find('#story').append(descr);
 
   //No back button, since it may no longer be in the stack... but you can go home
   $(page).find('#home').on('click', function () {
@@ -105,36 +104,38 @@ App.populator('PerezViewer', function (page, linkData) {
     App.load('Perez1', articleData[index]);
   });
 
-  // Tapping headline goes to full article on perezhilton.com
   $(page).find('#headline').clickable().on('click', function () {
     cards.browser.open(linkData.link); 
   });
+  $(img).clickable().on('click', function () {
+    cards.browser.open(articleData[index].link); 
+  });
 
-  // Send the article via Kik
+  // Send the article via Kik again
   $(page).find('#kik-it').on('click', function () {
-    //Removing the HTML from the brief description
+    var betterTitle = $('<div />').html(linkData.title).text();
     var brief = linkData.description;
-    var foobar = $('<div />').html(brief);
+    var foobar = $('<div />').html(brief); //Removing the HTML from the brief description
     var summary = foobar.find('p').text() || brief;
-
+    var imgURL2 = img.attr('src');
     var y = JSON.stringify(linkData);
 
     cards.kik.send({
-      title    : linkData.title                  ,
+      title    : betterTitle                     ,
       text     : summary                         ,
       pic      : imgURL2                         ,
       big      : false                           , 
       linkData : y
     });
   });
-
 });
 
+// If opened from a card open the "PerezViewer"
 if (cards.browser && cards.browser.linkData) {
   // Card was launched by a conversation
-  //var articleData = JSON.parse(cards.browser.linkData);
   App.load('PerezViewer', cards.browser.linkData);
-
-}else {
+}
+//Otherwise use the list of articles
+else {
   App.load('Perez1', articleData[0]);
 }

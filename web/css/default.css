@@ -108,7 +108,7 @@ html,body,div,form,p,ul,li,span,label,img{margin:0;padding:0;outline:0}html,body
 	float: center;
 	padding: 0 12px 0 24px;
 	width: auto;
-	text-align: center;
+	text-align: left;
 }
 .app-android .app-topbar .app-button[data-back].active ~ .app-title {
 	background: #3C3C3C;
