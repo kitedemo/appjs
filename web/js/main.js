@@ -2,6 +2,10 @@
 var articleData = [];
 var index = 0;
 
+function mod(a, b) {
+  return ((a % b) + b) % b
+}
+
 App.populator('Perez1', function (page, article) {
 
   //Pull in content from PerezHilton.com
@@ -12,77 +16,52 @@ App.populator('Perez1', function (page, article) {
   });
 
   var addContent = function () {
-    // Creates the article
-    $(page).find('#headline').html(articleData[index].title); //.html removes the weird &#038 from headlines
-    var descr = $('<div />').html(articleData[index].content);
-    var img = descr.find('img');
-    img.css('width', '100%'); //Adjusts images to 100% width
-    $(page).find('#image').replaceWith(img);
-    $(page).find('#story').append(descr);
+    //Creating an array of URLS like Justin's
+    var descr0 = $('<div />').html(articleData[0].content);
+    var img0 = descr0.find('img');
+    var imgURL0 = img0.attr('src');
+    
+    var descr1 = $('<div />').html(articleData[1].content);
+    var img1 = descr1.find('img');
+    var imgURL1 = img1.attr('src');
 
-    //iPhones don't handle URLS in the description, this will ensure they work
-    $(page).find('#story a').click(function (e) {
-      e.preventDefault();
-      cards.browser.open(this.href);
+    var descr2 = $('<div />').html(articleData[2].content);
+    var img2 = descr2.find('img');
+    var imgURL2 = img2.attr('src');
+
+    var bebiezerUrls = [imgURL0, imgURL1, imgURL2];
+    //console.log(bebiezerUrls);
+
+    var wrapper = page.querySelector('.wrapper');
+
+    var slideviewer = new SlideViewer(wrapper, source, {
+      startAt: parseInt(articleData[index].index, 10),
     });
 
-    // Tapping headline and image goes to full article on perezhilton.com
-    $(page).find('#headline').clickable().on('click', function (){
-      cards.browser.open(articleData[index].link); 
-    });
-    $(img).clickable().on('click', function () {
-      cards.browser.open(articleData[index].link); 
-    });
+    page.addEventListener('appLayout', function () {
+      slideviewer.refreshSize();
+    })
 
-    // If on the first article in the list, remove "Back" button
-    if (articleData[index].index === 0){
-      $(page).find('#Back').remove(); 
+    function source(i) {
+      var article = document.createElement('div');
+      article.style.height = '100%';
+
+      var heading = document.createElement('h2');
+      heading.innerText = 'Bieebr is onto GF #' + i + '!';
+      article.appendChild(heading);
+
+      var img = document.createElement('img');
+      img.src = bebiezerUrls[mod(i, bebiezerUrls.length)];
+      article.appendChild(img);
+
+      var content = document.createElement('p');
+      content.innerText = 'Can you believe it???? He left that last one so quickly! She will be so upset! Imagnge the headrbreak#!';
+      article.appendChild(content);
+
+      Scrollable(article);
+
+      return article;
     }
-
-    //If at the 10th article "Next" becomes "Go Home" and returns to article 0
-    var length = articleData.length; 
-    var len = length - 1;
-    if (articleData[index].index === len){
-      $(page).find('#Next').text('Home');    
-      $(page).find('#Next').on('click', function () {
-        index=0;
-        App.load('Perez1', articleData[index]);
-      });
-    }
-
-    else{
-      // Go to the next article
-      $(page).find('#Next').on('click', function () {
-        index++;
-        console.log(index);
-        App.load('Perez1', articleData[index]);
-      });
-      //Handle "back"
-      $(page).find('#Back').on('click', function () {
-        //This will automatically go to the previous page if "back" is clicked
-      });
-    }
-
-    // Send the article via Kik
-    $(page).find('#kik-it').on('click', function () {
-      //.html removes the weird &#038 from headlines, but needs to be a string so text
-      var betterTitle = $('<div />').html(articleData[index].title).text();
-      //Similarily need to removing the HTML from the brief description
-      var brief = articleData[index].description;
-      var foobar = $('<div />').html(brief);
-      var summary = foobar.find('p').text() || brief;
-      //Change the img to the img URL
-      var imgURL = img.attr('src');
-      var x = JSON.stringify(articleData[index]);
-
-      cards.kik.send({
-        title    : betterTitle                     ,
-        text     : summary                         ,
-        pic      : imgURL                          ,
-        big      : false                           , 
-        linkData : x 
-      });
-    });
   }
 });
 
