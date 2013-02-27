@@ -17,6 +17,8 @@ App.populator('Perez1', function (page, article) {
   });
 
   var addContent = function () {
+    doStuff(0);
+
     var wrapper = page.querySelector('.wrapper');
 
     var slideviewer = new SlideViewer(wrapper, source, {
@@ -27,16 +29,14 @@ App.populator('Perez1', function (page, article) {
       slideviewer.refreshSize();
     })
 
-    //Adding the Home button if you are on the last item in the list
-    slideviewer.on('flip', function(i){
+    function doStuff(i){
       if (i===(articleData.length - 1)){
         console.log('testing');
         var home = $('<div />');
         home.addClass('app-button left');
         home.text('Home');
         $(page).find('.app-topbar').append(home);
-
-        home.clickable().on('click', function (){
+        home.on('click', function (){
           slideviewer.setPage(0);
         });
       }
@@ -44,7 +44,31 @@ App.populator('Perez1', function (page, article) {
         $(page).find('.app-topbar .app-button.left').remove();
       }
 
-    })
+      //Set up the Kik button
+      $(page).find('#kik').on('click', function (){
+        var kikTitle = $('<div />').html(articleData[i].title).text();
+        var brief = articleData[i].description;
+        var foobar = $('<div />').html(brief);
+        var kikDescription = foobar.find('p').text() || brief;
+        var kikImg = $('<div />').html(articleData[i].content).find('img').attr('src');
+
+        var x = JSON.stringify(articleData[i]);
+
+        cards.kik.send({
+                title    : kikTitle                        ,
+                text     : kikDescription                  ,
+                pic      : kikImg                          ,
+                big      : false                           , 
+                linkData : x 
+              });
+
+      });
+    }
+
+    //Adding the Home button if you are on the last item in the list
+    slideviewer.on('flip', function(i){
+      doStuff(i);
+    });
 
     function source(i) {
       var article = $('<div />');
@@ -69,7 +93,8 @@ App.populator('Perez1', function (page, article) {
       descr.find('img').clickable().on('click', function (){
             cards.browser.open(articleData[i].link); 
       });
-      //If an article does not have an image set a default one
+
+      //TO DO - If an article does not have an image set a default one
       //console.log(descr.find('img').length);
       if (descr.find('img').length === 0){
         var img = $('<img />');
