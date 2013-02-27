@@ -92,21 +92,22 @@ App.populator('Perez1', function (page, article) {
   }
 });
 
-// For the future "preview" page
+// Perez Viewer, if opened from a Kik and the article may not be in the top 10
 App.populator('PerezViewer', function (page, linkData) {
   //App.load('Perez1', articleData);
-  $(page).find('#headline').clickable(); 
+  //$(page).find('#headline').clickable(); 
   $(page).find('#headline').html(linkData.title);
   $(page).find('#story').append(linkData.content);
 
-  index=0;
+  //No back button, since it may no longer be in the stack... but you can go home
   $(page).find('#home').on('click', function () {
-    App.load('Perez1', articleData[0]);
+    index=0;
+    App.load('Perez1', articleData[index]);
   });
 
   // Tapping headline goes to full article on perezhilton.com
-  $(page).find('#headline').on('click', function () {
-    cards.browser.open(articleData[index].link); 
+  $(page).find('#headline').clickable().on('click', function () {
+    cards.browser.open(linkData.link); 
   });
 
   // Send the article via Kik
@@ -119,9 +120,9 @@ App.populator('PerezViewer', function (page, linkData) {
     var y = JSON.stringify(linkData);
 
     cards.kik.send({
-      title    : linkData.title        ,
+      title    : linkData.title                  ,
       text     : summary                         ,
-      pic      : 'img/perez.jpg'                 ,
+      pic      : imgURL2                         ,
       big      : false                           , 
       linkData : y
     });
