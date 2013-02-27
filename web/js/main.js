@@ -10,27 +10,18 @@ App.populator('Perez1', function (page, article) {
 
   //Pull in content from PerezHilton.com
   feedParser.getArticles(function (articles){
+    console.log(articles);
     articleData = articles;
     index = articleData[index].index; 
     addContent();
   });
 
   var addContent = function () {
-    //Creating an array of URLS like Justin's
-    var descr0 = $('<div />').html(articleData[0].content);
-    var img0 = descr0.find('img');
-    var imgURL0 = img0.attr('src');
-    
-    var descr1 = $('<div />').html(articleData[1].content);
-    var img1 = descr1.find('img');
-    var imgURL1 = img1.attr('src');
-
-    var descr2 = $('<div />').html(articleData[2].content);
-    var img2 = descr2.find('img');
-    var imgURL2 = img2.attr('src');
-
-    var bebiezerUrls = [imgURL0, imgURL1, imgURL2];
-    //console.log(bebiezerUrls);
+    // Creating an array of img URLS similar to Justin's
+    // var bebiezerUrls = [];
+    // for (j=0; j<articleData.length; j++){
+    //   bebiezerUrls.push($('<div />').html(articleData[j].content).find('img').attr('src'));
+    // }
 
     var wrapper = page.querySelector('.wrapper');
 
@@ -43,24 +34,43 @@ App.populator('Perez1', function (page, article) {
     })
 
     function source(i) {
-      var article = document.createElement('div');
-      article.style.height = '100%';
+      var article = $('<div />');
+      article.css('height', '100%');
 
-      var heading = document.createElement('h2');
-      heading.innerText = 'Bieebr is onto GF #' + i + '!';
-      article.appendChild(heading);
+      var articleSection = $('<div />');
+      articleSection.addClass('app-section');
+      articleSection.css('padding', 10);
 
-      var img = document.createElement('img');
-      img.src = bebiezerUrls[mod(i, bebiezerUrls.length)];
-      article.appendChild(img);
+      var heading = $('<h2 />');
+      var head = $('<div />').html(articleData[i].title);
+      heading.text(head.text());
+      articleSection.append(heading);
 
-      var content = document.createElement('p');
-      content.innerText = 'Can you believe it???? He left that last one so quickly! She will be so upset! Imagnge the headrbreak#!';
-      article.appendChild(content);
+      //var img = $('<img />');
+      //img.attr('src', bebiezerUrls[mod(i, bebiezerUrls.length)]);
+      //articleSection.append(img);
 
-      Scrollable(article);
+      var content = $('<p />');
+      var descr = $('<div />').html(articleData[i].content);
+      descr.find('img').clickable().on('click', function (){
+            cards.browser.open(articleData[i].link); 
+      });
+      if (descr.find('img').length ===0){
+        console.log('test');
+      }
 
-      return article;
+      content.append(descr);
+      articleSection.append(content);
+
+      var articleSection2 = $('<div />');
+      articleSection2.addClass('app-section');
+
+      article.append(articleSection);
+      article.append(articleSection2);
+
+      article.scrollable();
+
+      return article[0];
     }
   }
 });
