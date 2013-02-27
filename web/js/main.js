@@ -10,19 +10,13 @@ App.populator('Perez1', function (page, article) {
 
   //Pull in content from PerezHilton.com
   feedParser.getArticles(function (articles){
-    console.log(articles);
+    //console.log(articles);
     articleData = articles;
     index = articleData[index].index; 
     addContent();
   });
 
   var addContent = function () {
-    // Creating an array of img URLS similar to Justin's
-    // var bebiezerUrls = [];
-    // for (j=0; j<articleData.length; j++){
-    //   bebiezerUrls.push($('<div />').html(articleData[j].content).find('img').attr('src'));
-    // }
-
     var wrapper = page.querySelector('.wrapper');
 
     var slideviewer = new SlideViewer(wrapper, source, {
@@ -33,6 +27,25 @@ App.populator('Perez1', function (page, article) {
       slideviewer.refreshSize();
     })
 
+    //Adding the Home button if you are on the last item in the list
+    slideviewer.on('flip', function(i){
+      if (i===(articleData.length - 1)){
+        console.log('testing');
+        var home = $('<div />');
+        home.addClass('app-button left');
+        home.text('Home');
+        $(page).find('.app-topbar').append(home);
+
+        home.clickable().on('click', function (){
+          slideviewer.setPage(0);
+        });
+      }
+      else{
+        $(page).find('.app-topbar .app-button.left').remove();
+      }
+
+    })
+
     function source(i) {
       var article = $('<div />');
       article.css('height', '100%');
@@ -41,32 +54,33 @@ App.populator('Perez1', function (page, article) {
       articleSection.addClass('app-section');
       articleSection.css('padding', 10);
 
+      //* Article Heading Section
       var heading = $('<h2 />');
       var head = $('<div />').html(articleData[i].title);
       heading.text(head.text());
+      heading.clickable().on('click', function (){
+             cards.browser.open(articleData[i].link); 
+      });
       articleSection.append(heading);
 
-      //var img = $('<img />');
-      //img.attr('src', bebiezerUrls[mod(i, bebiezerUrls.length)]);
-      //articleSection.append(img);
-
+      //* Article Description Section including the Image
       var content = $('<p />');
       var descr = $('<div />').html(articleData[i].content);
       descr.find('img').clickable().on('click', function (){
             cards.browser.open(articleData[i].link); 
       });
-      if (descr.find('img').length ===0){
-        console.log('test');
+      //If an article does not have an image set a default one
+      //console.log(descr.find('img').length);
+      if (descr.find('img').length === 0){
+        var img = $('<img />');
+        img.src('img/perez.png');
+        articleSection.append(img);
       }
-
       content.append(descr);
+
+      //Actually append all the article elements
       articleSection.append(content);
-
-      var articleSection2 = $('<div />');
-      articleSection2.addClass('app-section');
-
       article.append(articleSection);
-      article.append(articleSection2);
 
       article.scrollable();
 
