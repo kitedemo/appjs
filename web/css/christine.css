@@ -82,6 +82,26 @@
 	background-position: center;
 }
 
+/*BOTH - The carousel dot*/
+.dot {
+	margin:9px 4px 4px 0;
+    width: 8px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/*BOTH - The carousel dot*/
+.dot.active {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+#dots{
+	text-align: center;
+	position: relative;
+}
+
 /******** FROM KIK ***********/
 /*BOTH - When you open from a kik have purple top bar*/
 .fromKikTopBar{
@@ -133,18 +153,6 @@
 	color: transparent;
 }
 
-/* - When you open from a kik have pink >/home button 
-.app-iOS .app-topbar.fromKikTopBar .app-button.left {
-	padding: 0;
-	height: 100%;
-	width: 33%;
-	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAcCAYAAABoMT8aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAVhJREFUSEudlVdOxDAQhnMGjpCuJG/cgTPQuyhHWfGExAILBBDlKtSlivLIDbhC0BfJkVFmsitb+mXHM//nxBknHs33fVVhGHpfW1fV70SvpduZfqUCgiCo+6elY9H8unpaERcBmFGWZZ5kRnme1zkqgP5lpRTNw8WjenUR0JindoeSmf0gx+SpgPf185YZ3c3uN6vT/wOYSZIkM1A7D4mAj40LEVCW5aSdhxqAmXyYPxTNz8snrdVR3ZhESZJ439vXLTNzcRw3eSKAC61o7ucOxNVR3RhoRcN+EJfMqAFoRUO9E+8EkCSZTb1rZtQJ4K5IGglg8LZ2JkLGegQGnC4JMNYmmqDzaySA0jR1KyQGJvC4MGgBUGcpmwsT/Ny8FCE/yc7AzkMiwPk420GnD4oduJneEwEjP2nIBLXzwes2eSoAacWFiqLQAQZC7/RjsRVFUcevrV/9AdMBSXutrcrJAAAAAElFTkSuQmCC);
-	background-position: 8px center;
-	background-repeat: no-repeat;
-	-webkit-background-size: 8px 14px;
-	background-size: 8px 14px;
-	color: transparent;
-}*/
 
 p {
 	text-align: left;

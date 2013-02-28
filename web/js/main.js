@@ -12,7 +12,18 @@ App.populator('Perez1', function (page, article) {
     addContent();
   });
   var addContent = function () {
+    //Adding the dot carousel
+     for (var d=0;d<articleData.length;d++){
+       var newDot= $('<div />');
+       newDot.addClass('dot');
+       $(page).find('#dots').append(newDot);
+    }
+
+    console.log($(page).find('.dot').length);
+
     doStuff(0); //Since on('flip') isn't thrown initially
+    addDot(0);
+    
     var wrapper = page.querySelector('.wrapper');
     //Create a slidview
     wrapper.innerHTML='';
@@ -55,8 +66,17 @@ App.populator('Perez1', function (page, article) {
         $(page).find('.app-topbar .app-button.left').remove();
       }
     }
+
+    //* Adding a darker dot for the page your on
+     function addDot(i){
+        $(page).find('#dots .dot.active').removeClass('active'); //remove all active dots
+        var current = $(page).find('#dots .dot').eq(i);
+        current.addClass('active');
+     }
+
     slideviewer.on('flip', function(i){
       doStuff(i);
+      addDot(i);
     });
 
     //* For real adds the content
@@ -99,7 +119,6 @@ App.populator('Perez1', function (page, article) {
           console.log('testing');
           $(this).find('iframe').width('100%');
           $(this).find('iframe').height('56%')
-
         }
       });
       articleSection.append(descr);
@@ -110,7 +129,7 @@ App.populator('Perez1', function (page, article) {
       return article[0];
     }
   }
-},  function (page, article) {// Destructor for Perez
+}, function (page, article) {// Destructor for Perez
 
 });
 
