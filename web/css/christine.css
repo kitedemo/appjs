@@ -127,6 +127,14 @@
 	color: #696969;
 }
 
+.loader{
+	height: 100%;
+	background-image: url('../img/bigger-loader.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+
 
 p {
 	text-align: left;

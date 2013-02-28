@@ -2,33 +2,46 @@
 var articleData = [];
 var index = 0;
 
-function mod(a, b) {
-  return ((a % b) + b) % b
-}
-
 App.populator('Perez1', function (page, article) {
 
-  //Pull in content from PerezHilton.com
+  //Pull in content from PerezHilton.com and create an array of articles
   feedParser.getArticles(function (articles){
-    //console.log(articles);
+    console.log(articles);
     articleData = articles;
     index = articleData[index].index; 
     addContent();
   });
 
   var addContent = function () {
-    doStuff(0);
-
+    doStuff(0); //Since on('flip') isn't thrown initially
     var wrapper = page.querySelector('.wrapper');
-
+    //Create a slidview
+    wrapper.innerHTML='';
     var slideviewer = new SlideViewer(wrapper, source, {
       startAt: parseInt(articleData[index].index, 10),
     });
-
     page.addEventListener('appLayout', function () {
       slideviewer.refreshSize();
     })
 
+    //* Adding the send Kik button
+    $(page).find('#kik').on('click', function (){
+      var j = slideviewer.page(); //index to current page not i
+      var kikTitle = $('<div />').html(articleData[j].title).text();
+      var kikDescription = $('<div />').html(articleData[j].description).text();
+      var kikImg = $('<div />').html(articleData[j].content).find('img').attr('src');
+      var kikLinkData = JSON.stringify(articleData[j]);
+
+      cards.kik.send({
+              title    : kikTitle                        ,
+              text     : kikDescription                  ,
+              pic      : kikImg                          ,
+              big      : false                           , 
+              linkData : kikLinkData
+            });
+    });
+
+    //* Adding the 'Home' if you flip to the last page
     function doStuff(i){
       if (i===(articleData.length - 1)){
         console.log('testing');
@@ -43,40 +56,18 @@ App.populator('Perez1', function (page, article) {
       else{
         $(page).find('.app-topbar .app-button.left').remove();
       }
-
-      //Set up the Kik button
-      $(page).find('#kik').on('click', function (){
-        var kikTitle = $('<div />').html(articleData[i].title).text();
-        var brief = articleData[i].description;
-        var foobar = $('<div />').html(brief);
-        var kikDescription = foobar.find('p').text() || brief;
-        var kikImg = $('<div />').html(articleData[i].content).find('img').attr('src');
-
-        var x = JSON.stringify(articleData[i]);
-
-        cards.kik.send({
-                title    : kikTitle                        ,
-                text     : kikDescription                  ,
-                pic      : kikImg                          ,
-                big      : false                           , 
-                linkData : x 
-              });
-
-      });
     }
-
-    //Adding the Home button if you are on the last item in the list
     slideviewer.on('flip', function(i){
       doStuff(i);
     });
 
+    //* For real adds the content
     function source(i) {
       var article = $('<div />');
       article.css('height', '100%');
 
       var articleSection = $('<div />');
       articleSection.addClass('app-section');
-      articleSection.css('padding', 10);
 
       //* Article Heading Section
       var heading = $('<h2 />');
@@ -85,13 +76,20 @@ App.populator('Perez1', function (page, article) {
       heading.clickable().on('click', function (){
              cards.browser.open(articleData[i].link); 
       });
+      heading.css('padding',10);
       articleSection.append(heading);
 
       //* Article Description Section including the Image
-      var content = $('<p />');
+      //var content = $('<p />');
       var descr = $('<div />').html(articleData[i].content);
       descr.find('img').clickable().on('click', function (){
             cards.browser.open(articleData[i].link); 
+      });
+
+      descr.children().each(function(i, descrChild){
+        if ($(this).find('img').length ===0){
+          $(this).css('padding',10);
+        }
       });
 
       //TO DO - If an article does not have an image set a default one
@@ -101,37 +99,29 @@ App.populator('Perez1', function (page, article) {
         img.src('img/perez.png');
         articleSection.append(img);
       }
-      content.append(descr);
+      articleSection.append(descr);
 
       //Actually append all the article elements
-      articleSection.append(content);
+      //articleSection.append(content);
       article.append(articleSection);
-
       article.scrollable();
-
       return article[0];
     }
   }
 });
 
-// Perez Viewer
+
+// fromKikPerez Viewer
 // If opened from a Kik message the article may not be in the top 10
 // This should not depend on index for positioning
-App.populator('PerezViewer', function (page, linkData) {
-  //Create the article
+App.populator('fromKikPerez', function (page, linkData) {
+  //Create the same UI as the slide viewer page
   $(page).find('#headline').html(linkData.title);
   var descr = $('<div />').html(linkData.content);
   var img = descr.find('img');
   img.css('width', '100%');  //Adjusts images to 100% width
   $(page).find('#image').replaceWith(img);
   $(page).find('#story').append(descr);
-
-  //No back button, since it may no longer be in the stack... but you can go home
-  $(page).find('#home').on('click', function () {
-    index=0;
-    App.load('Perez1', articleData[index]);
-  });
-
   $(page).find('#headline').clickable().on('click', function () {
     cards.browser.open(linkData.link); 
   });
@@ -139,29 +129,34 @@ App.populator('PerezViewer', function (page, linkData) {
     cards.browser.open(articleData[index].link); 
   });
 
-  // Send the article via Kik again
-  $(page).find('#kik-it').on('click', function () {
-    var betterTitle = $('<div />').html(linkData.title).text();
-    var brief = linkData.description;
-    var foobar = $('<div />').html(brief); //Removing the HTML from the brief description
-    var summary = foobar.find('p').text() || brief;
-    var imgURL2 = img.attr('src');
-    var y = JSON.stringify(linkData);
+  //Since opened from a Kik, no slide viewer, thus force user to go 'Home'
+  $(page).find('#home').on('click', function () {
+    index=0;
+    App.load('Perez1', articleData[index]);
+  });
+
+  //Able to send article via Kik again
+  $(page).find('#kik').on('click', function () {
+    var fromKikTitle = $('<div />').html(linkData.title).text();
+    var fromKikDescription = $('<div />').html(linkData.description).text();
+    var fromKikImg = $('<div />').html(linkData.content).find('img').attr('src');
+    var fromKikLinkData = JSON.stringify(linkData);
 
     cards.kik.send({
-      title    : betterTitle                     ,
-      text     : summary                         ,
-      pic      : imgURL2                         ,
+      title    : fromKikTitle                    ,
+      text     : fromKikDescription              ,
+      pic      : fromKikImg                      ,
       big      : false                           , 
-      linkData : y
+      linkData : fromKikLinkData
     });
   });
 });
 
+
 // If opened from a card open the "PerezViewer"
 if (cards.browser && cards.browser.linkData) {
   // Card was launched by a conversation
-  App.load('PerezViewer', cards.browser.linkData);
+  App.load('fromKikPerez', cards.browser.linkData);
 }
 //Otherwise use the list of articles
 else {
