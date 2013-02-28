@@ -44,7 +44,6 @@ App.populator('Perez1', function (page, article) {
     //* Adding the 'Home' if you flip to the last page
     function doStuff(i){
       if (i===(articleData.length - 1)){
-        console.log('testing');
         var home = $('<div />');
         home.addClass('app-button left');
         home.text('Home');
@@ -85,20 +84,34 @@ App.populator('Perez1', function (page, article) {
       descr.find('img').clickable().on('click', function (){
             cards.browser.open(articleData[i].link); 
       });
-
+      //Finds all the 'children' <p> in the description without an image, adds padding to the text
       descr.children().each(function(i, descrChild){
         if ($(this).find('img').length ===0){
           $(this).css('padding',10);
         }
+        //Try to deal with articles that have no images
+        if ($(this).find('span').length){
+          var imgs = new Image();
+          imgs.src = 'img/perez.jpg';
+          $(this).find('span').replaceWith(imgs);
+        }
+        // Try and deal with articles that have Embedded YouTube
+        if ($(this).find('iframe').length){
+          console.log('testing');
+          $(this).find('iframe').width('100%');
+          $(this).find('iframe').height('60%')
+
+        }
       });
 
-      //TO DO - If an article does not have an image set a default one
-      //console.log(descr.find('img').length);
-      if (descr.find('img').length === 0){
-        var img = $('<img />');
-        img.src('img/perez.png');
-        articleSection.append(img);
-      }
+      // //TO DO - If an article does not have an image set a default one
+      //console.log(descr.find('img').);
+      // if (descr.find('img').length === 0){
+      //   // var imgs = new Image();
+      //   // imgs.src = article.img;
+      //   // articleSection.append(imgs);
+      // }
+
       articleSection.append(descr);
 
       //Actually append all the article elements
