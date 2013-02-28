@@ -4,44 +4,16 @@
 .app-topbar {
 	background: #EE1289;
 }
+/*AND - TOP BAR - Change to Pink and get rid of the black line under the top bar*/
 .app-android .app-topbar {
-	/*
-	-webkit-box-shadow: 0px 0px 5px rgba(0,0,0,0.5),
-		inset 0 1px 0 #2B2B2B,
-		inset 0 -2px 0 #1B1B1B;
-	-moz-box-shadow: 0px 0px 5px rgba(0,0,0,0.5),
-		inset 0 1px 0 #2B2B2B,
-		inset 0 -2px 0 #1B1B1B;
-	box-shadow: 0px 0px 5px rgba(0,0,0,0.5),
-		inset 0 1px 0 #2B2B2B,
-		inset 0 -2px 0 #1B1B1B;
-	*/
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
 	border: none;
 	background: #EE1289;
 }
+/*iOS - TOP BAR - Change to Pink*/
 .app-ios .app-topbar {
-	/*
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#525252), to(#1F1E1F));
-	background-image: -webkit-linear-gradient(#525252, #1F1E1F);
-	background-image: -moz-linear-gradient(#525252, #1F1E1F);
-	background-image: -ms-linear-gradient(#525252, #1F1E1F);
-	background-image: -o-linear-gradient(#525252, #1F1E1F);
-	background-image: linear-gradient(#525252, #1F1E1F);
-	-webkit-box-shadow: 0px 0px 5px rgba(0,0,0,0.5),
-		inset 0 1px 0 #797979,
-		inset 0 -1px 0 #333;
-	-moz-box-shadow: 0px 0px 5px rgba(0,0,0,0.5),
-		inset 0 1px 0 #797979,
-		inset 0 -1px 0 #333;
-	box-shadow: 0px 0px 5px rgba(0,0,0,0.5),
-		inset 0 1px 0 #797979,
-		inset 0 -1px 0 #333;
-	color: #EEE;
-	text-shadow: 0px -1px 0 #1D1E1E;
-	*/
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
@@ -50,8 +22,7 @@
 	text-shadow: none;
 }
 
-
-/*Custom UI for end of list "home" button since it was overlapping*/
+/*AND - TOP BAR LEFT BUTTON - Custom UI for end of list "home" button since it was overlapping*/
 .app-android .app-topbar .app-button.left {
 	padding: 0;
 	height: 100%;
@@ -64,31 +35,8 @@
 	color: transparent;
 }
 
-
+/*iOS - TOP BAR BUTTONS - Make top bar buttons more like Android*/
 .app-ios .app-topbar .app-button {
-	/*
-	margin: 7px 5px;
-	padding: 0 10px;
-	height: 28px;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#585858), to(#1B1B1B));
-	background-image: -webkit-linear-gradient(top, #585858, #1B1B1B);
-	background-image: -moz-linear-gradient(top, #585858, #1B1B1B);
-	background-image: -ms-linear-gradient(top, #585858, #1B1B1B);
-	background-image: -o-linear-gradient(top, #585858, #1B1B1B);
-	background-image: linear-gradient(top, #585858, #1B1B1B);
-	border: 1px solid #201F20;
-	-webkit-box-shadow: 0 1px 1px rgba(255,255,255,0.1),
-		inset 0 0 2px rgba(0,0,0,0.3);
-	-moz-box-shadow: 0 1px 1px rgba(255,255,255,0.1),
-		inset 0 0 2px rgba(0,0,0,0.3);
-	box-shadow: 0 1px 1px rgba(255,255,255,0.1),
-		inset 0 0 2px rgba(0,0,0,0.3);
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
-	border-radius: 6px;
-	font-size: 14px;
-	line-height: 28px;
-	*/
 	margin: 0px;
 	height: 44px;
 	background: transparent;
@@ -102,31 +50,31 @@
 	line-height: 44px;
 }
 
-.app-ios .app-topbar .app-button.active {
-	/*
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#2F2F2F), to(#0D0D0D));
-	background-image: -webkit-linear-gradient(top, #2F2F2F, #0D0D0D);
-	background-image: -moz-linear-gradient(top, #2F2F2F, #0D0D0D);
-	background-image: -ms-linear-gradient(top, #2F2F2F, #0D0D0D);
-	background-image: -o-linear-gradient(top, #2F2F2F, #0D0D0D);
-	background-image: linear-gradient(top, #2F2F2F, #0D0D0D);
-	-webkit-box-shadow: 0 1px 1px rgba(255,255,255,0.1),
-		inset 0 0 3px rgba(0,0,0,0.4);
-	-moz-box-shadow: 0 1px 1px rgba(255,255,255,0.1),
-		inset 0 0 3px rgba(0,0,0,0.4);
-	box-shadow: 0 1px 1px rgba(255,255,255,0.1),
-		inset 0 0 3px rgba(0,0,0,0.4);
-	*/
-	color: #EE1289;
-	background: blue;
+/*iOS - TOP BAR LEFT BUTTON/HOME - Use custom home button that is the same as Android < */
+.app-ios .app-topbar .app-button.left {
+	padding: 0;
+	height: 100%;
+	width: 33%;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAcCAMAAABf788oAAAAjVBMVEUiIiIjIyMrKysqKioAAACdnZ0mJiYnJyednZ0kJCQoKCgsLCwlJSXLy8vPz8/MzMzJycnNzc3Ozs7GxsagoKCjo6O3t7exsbHIyMisrKzAwMDExMS+vr6ysrLHx8fKysq0tLStra27u7urq6unp6fBwcGoqKjDw8Ourq66urq9vb2fn5/FxcWwsLClpaWY7qkYAAAADXRSTlMAAAAAADMAAJkAAAAAOhxptwAAAMVJREFUeF5d0dVuBTEMBNCZvUWY0OLFMsP/f15lxWqb5i1HijO2cYR6zndKKfWDA7EuksIeFcjVNkv5uaMDPoOkco8KxNkhSmVHwmEKkjSiAjFeW8UJhMNdkOLh2IF4yFbxBYQBebopUtmcsIJnil8gYIBVn6XwCsJhDlJOww8Mi2Xa290hGcy/gJt/T9D1sSlK3IbmW/LisQkG4qmJDhBvxZtzwKim/WZADu9LM0LQGpLKGnRg92Fr2F7y76KiL6qeK1/lN9FpDuyoOMUMAAAAAElFTkSuQmCC);
+	background-position: 8px center;
+	background-repeat: no-repeat;
+	-webkit-background-size: 8px 14px;
+	background-size: 8px 14px;
+	color: transparent;
 }
 
-/*Light Pink content area*/
+/* - SELECTED STATE - Change the selected state of the top bar buttons*/
+.app-topbar .app-button.active {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+/*BOTH - Light Pink content area*/
 .app-page, .app-content {
 	background: #FFCCCC;
 	color: #696969;
 }
 
+/*BOTH - Loading gif when waiting for the content area to load*/
 .loader{
 	height: 100%;
 	background-image: url('../img/bigger-loader.gif');
@@ -134,7 +82,69 @@
 	background-position: center;
 }
 
+/******** FROM KIK ***********/
+/*BOTH - When you open from a kik have purple top bar*/
+.fromKikTopBar{
+	background: #AA00FF;
+}
 
+/*AND - When you open from a kik have purple top bar*/
+.app-android .app-topbar.fromKikTopBar{
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	border: none;
+	background: #AA00FF;
+
+}
+
+/*iOS - When you open from a kik have purple top bar*/
+.app-ios .app-topbar.fromKikTopBar {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	border: none;
+	background: #AA00FF;
+	text-shadow: none;
+}
+
+/*iOS - SELECTED STATE - Change the selected state of the top bar buttons*/
+.app-ios .app-topbar.fromKikTopBar .app-button.active {
+	background: #3C3C3C;
+}
+
+
+/*BOTH - When you open from a kik have light purple content area*/
+.fromKikSection{
+	background: #EED2EE;
+	color: #696969;
+}
+
+/*AND - TOP BAR LEFT BUTTON - Custom UI for end of list "home" button since it was overlapping*/
+.app-topbar.fromKikTopBar .app-button.left {
+	padding: 0;
+	height: 100%;
+	width: 33%;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAcCAYAAABoMT8aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAVhJREFUSEudlVdOxDAQhnMGjpCuJG/cgTPQuyhHWfGExAILBBDlKtSlivLIDbhC0BfJkVFmsitb+mXHM//nxBknHs33fVVhGHpfW1fV70SvpduZfqUCgiCo+6elY9H8unpaERcBmFGWZZ5kRnme1zkqgP5lpRTNw8WjenUR0JindoeSmf0gx+SpgPf185YZ3c3uN6vT/wOYSZIkM1A7D4mAj40LEVCW5aSdhxqAmXyYPxTNz8snrdVR3ZhESZJ439vXLTNzcRw3eSKAC61o7ucOxNVR3RhoRcN+EJfMqAFoRUO9E+8EkCSZTb1rZtQJ4K5IGglg8LZ2JkLGegQGnC4JMNYmmqDzaySA0jR1KyQGJvC4MGgBUGcpmwsT/Ny8FCE/yc7AzkMiwPk420GnD4oduJneEwEjP2nIBLXzwes2eSoAacWFiqLQAQZC7/RjsRVFUcevrV/9AdMBSXutrcrJAAAAAElFTkSuQmCC);
+	background-position: 8px center;
+	background-repeat: no-repeat;
+	-webkit-background-size: 8px 14px;
+	background-size: 8px 14px;
+	color: transparent;
+}
+
+/* - When you open from a kik have pink >/home button 
+.app-iOS .app-topbar.fromKikTopBar .app-button.left {
+	padding: 0;
+	height: 100%;
+	width: 33%;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAcCAYAAABoMT8aAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAVhJREFUSEudlVdOxDAQhnMGjpCuJG/cgTPQuyhHWfGExAILBBDlKtSlivLIDbhC0BfJkVFmsitb+mXHM//nxBknHs33fVVhGHpfW1fV70SvpduZfqUCgiCo+6elY9H8unpaERcBmFGWZZ5kRnme1zkqgP5lpRTNw8WjenUR0JindoeSmf0gx+SpgPf185YZ3c3uN6vT/wOYSZIkM1A7D4mAj40LEVCW5aSdhxqAmXyYPxTNz8snrdVR3ZhESZJ439vXLTNzcRw3eSKAC61o7ucOxNVR3RhoRcN+EJfMqAFoRUO9E+8EkCSZTb1rZtQJ4K5IGglg8LZ2JkLGegQGnC4JMNYmmqDzaySA0jR1KyQGJvC4MGgBUGcpmwsT/Ny8FCE/yc7AzkMiwPk420GnD4oduJneEwEjP2nIBLXzwes2eSoAacWFiqLQAQZC7/RjsRVFUcevrV/9AdMBSXutrcrJAAAAAElFTkSuQmCC);
+	background-position: 8px center;
+	background-repeat: no-repeat;
+	-webkit-background-size: 8px 14px;
+	background-size: 8px 14px;
+	color: transparent;
+}*/
 
 p {
 	text-align: left;

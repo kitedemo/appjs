@@ -46,7 +46,7 @@ App.populator('Perez1', function (page, article) {
       if (i===(articleData.length - 1)){
         var home = $('<div />');
         home.addClass('app-button left');
-        home.text('Home');
+        //home.text('Home');
         $(page).find('.app-topbar').append(home);
         home.on('click', function (){
           slideviewer.setPage(0);
@@ -113,11 +113,24 @@ App.populator('Perez1', function (page, article) {
   }
 });
 
+function handleBackButton () {
+  if (cards.kik.returnToConversation) {
+      // Card was launched by a conversation
+      cards.kik.returnToConversation(); // return to conversation
+  }
+  return false;
+}
 
 // fromKikPerez Viewer
 // If opened from a Kik message the article may not be in the top 10
 // This should not depend on index for positioning
 App.populator('fromKikPerez', function (page, linkData) {
+  var os = cards.utils.platform.os;
+  
+  if (os === 'android'){
+    cards.browser.back(handleBackButton);
+  }
+  
   //Create the same UI as the slide viewer page
   $(page).find('#headline').html(linkData.title);
   var descr = $('<div />').html(linkData.content);
@@ -153,6 +166,11 @@ App.populator('fromKikPerez', function (page, linkData) {
       linkData : fromKikLinkData
     });
   });
+}, function(page, linkData){ //Destructor for the fromKikPerez Populator
+  var os = cards.utils.platform.os;
+  if (os === 'android'){
+    cards.browser.unbindBack(handleBackButton);
+  }
 });
 
 
