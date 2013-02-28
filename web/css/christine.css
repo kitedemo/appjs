@@ -84,7 +84,7 @@
 
 /*BOTH - The carousel dot*/
 .dot {
-	margin:9px 4px 4px 0;
+	margin:8px 4px 4px 0px;
     width: 8px;
     height: 8px;
     background: rgba(0, 0, 0, 0.1);
@@ -100,6 +100,7 @@
 #dots{
 	text-align: center;
 	position: relative;
+	z-index: 10;
 }
 
 /******** FROM KIK ***********/
@@ -153,6 +154,9 @@
 	color: transparent;
 }
 
+.app-page .app-section{
+	margin: 0 8px 8px 8px;
+}
 
 p {
 	text-align: left;
