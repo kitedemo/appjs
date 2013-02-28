@@ -89,33 +89,23 @@ App.populator('Perez1', function (page, article) {
         if ($(this).find('img').length ===0){
           $(this).css('padding',10);
         }
-        //Try to deal with articles that have no images
+        //Add default image to articles that have no images
         if ($(this).find('span').length){
           var imgs = new Image();
           imgs.src = 'img/perez.jpg';
           $(this).find('span').replaceWith(imgs);
         }
-        // Try and deal with articles that have Embedded YouTube
+        //Scale the Embedded YouTube video to fit the page
         if ($(this).find('iframe').length){
           console.log('testing');
           $(this).find('iframe').width('100%');
-          $(this).find('iframe').height('60%')
+          $(this).find('iframe').height('56%')
 
         }
       });
-
-      // //TO DO - If an article does not have an image set a default one
-      //console.log(descr.find('img').);
-      // if (descr.find('img').length === 0){
-      //   // var imgs = new Image();
-      //   // imgs.src = article.img;
-      //   // articleSection.append(imgs);
-      // }
-
       articleSection.append(descr);
 
       //Actually append all the article elements
-      //articleSection.append(content);
       article.append(articleSection);
       article.scrollable();
       return article[0];
