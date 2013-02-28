@@ -11,7 +11,6 @@ App.populator('Perez1', function (page, article) {
     index = articleData[index].index; 
     addContent();
   });
-
   var addContent = function () {
     doStuff(0); //Since on('flip') isn't thrown initially
     var wrapper = page.querySelector('.wrapper');
@@ -111,6 +110,8 @@ App.populator('Perez1', function (page, article) {
       return article[0];
     }
   }
+},  function (page, article) {// Destructor for Perez
+
 });
 
 function handleBackButton () {
@@ -118,19 +119,21 @@ function handleBackButton () {
       // Card was launched by a conversation
       cards.kik.returnToConversation(); // return to conversation
   }
-  return false;
+  else{
+    return false
+  };
 }
 
 // fromKikPerez Viewer
 // If opened from a Kik message the article may not be in the top 10
 // This should not depend on index for positioning
 App.populator('fromKikPerez', function (page, linkData) {
+  // If on android and opening from a Kik message, handle the back button
   var os = cards.utils.platform.os;
-  
-  if (os === 'android'){
-    cards.browser.back(handleBackButton);
+  if (os.name === 'android'){
+    cards.browser.back(handleBackButton);  
   }
-  
+
   //Create the same UI as the slide viewer page
   $(page).find('#headline').html(linkData.title);
   var descr = $('<div />').html(linkData.content);
@@ -148,7 +151,13 @@ App.populator('fromKikPerez', function (page, linkData) {
   //Since opened from a Kik, no slide viewer, thus force user to go 'Home'
   $(page).find('#home').on('click', function () {
     index=0;
-    App.load('Perez1', articleData[index]);
+    App.load('Perez1', articleData[index], function () {//This is a callback:)
+      //When done loading new PErez1, remove from the backstack
+      try {
+        App.removeFromStack(0);
+      }
+      catch (err) {}
+    });
   });
 
   //Able to send article via Kik again
@@ -167,10 +176,10 @@ App.populator('fromKikPerez', function (page, linkData) {
     });
   });
 }, function(page, linkData){ //Destructor for the fromKikPerez Populator
-  var os = cards.utils.platform.os;
-  if (os === 'android'){
-    cards.browser.unbindBack(handleBackButton);
-  }
+    var os = cards.utils.platform.os;
+    if (os.name === 'android'){
+      cards.browser.unbindBack(handleBackButton);
+    }
 });
 
 
