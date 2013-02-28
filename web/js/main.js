@@ -167,6 +167,24 @@ App.populator('fromKikPerez', function (page, linkData) {
     cards.browser.open(articleData[index].link); 
   });
 
+  //Finds all the 'children' <p> in the description without an image, adds padding to the text
+  descr.children().each(function(i, descrChild){
+    if ($(this).find('img').length ===0){
+      $(this).css('padding',10);
+    }
+    //Add default image to articles that have no images
+    if ($(this).find('span').length){
+      var imgs = new Image();
+      imgs.src = 'img/perez.jpg';
+      $(this).find('span').replaceWith(imgs);
+    }
+    //Scale the Embedded YouTube video to fit the page
+    if ($(this).find('iframe').length){
+      console.log('testing');
+      $(this).find('iframe').width('100%');
+      $(this).find('iframe').height('56%')
+    }
+  });
   //Since opened from a Kik, no slide viewer, thus force user to go 'Home'
   $(page).find('#home').on('click', function () {
     index=0;
