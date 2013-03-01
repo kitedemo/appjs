@@ -1,17 +1,18 @@
-// Defining some global variables
+// Global Variables
 var articleData = [];
 var index = 0;
 
 App.populator('Perez1', function (page, article) {
 
-  //Pull in content from PerezHilton.com and create an array of articles
+  // Pull in content from PerezHilton.com and create an array of articles
   feedParser.getArticles(function (articles){
+    console.log(articles);
     articleData = articles;
-    index = articleData[index].index; 
+    index = articleData[index].index;  
     addContent();
   });
-  //Adding the dot carousel - Note: this used to be not hardcoded but loading screen was shitty
-  // Changed to hardcoding to make it better
+  // Adding the dot carousel - Note: this used to be not hardcoded but transitioning 
+  // to the loading screen looked awful so changed to hardcoding outside of addContent
    for (var d=0;d<10;d++){
      var newDot= $('<div />');
      newDot.addClass('dot');
@@ -19,12 +20,12 @@ App.populator('Perez1', function (page, article) {
   }
 
   var addContent = function () {
-    doStuff(0); //Since on('flip') isn't thrown initially
+    addHome(0); //Since on('flip') isn't thrown initially for page0
     addDot(0);
     
     var wrapper = page.querySelector('.wrapper');
-    //Create a slidview
-    wrapper.innerHTML='';
+    wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
+    //* Create the slideview
     var slideviewer = new SlideViewer(wrapper, source, {
       startAt: parseInt(articleData[index].index, 10),
     });
@@ -49,8 +50,8 @@ App.populator('Perez1', function (page, article) {
             });
     });
 
-    //* Adding the 'Home' if you flip to the last page
-    function doStuff(i){
+    //* Adding 'Home' if you flip to the last page
+    function addHome(i){
       if (i===(articleData.length - 1)){
         var home = $('<div />');
         home.addClass('app-button left');
@@ -64,19 +65,20 @@ App.populator('Perez1', function (page, article) {
       }
     }
 
-    //* Adding a darker dot for the page your on
+    //* Adding active dot for the page your on
      function addDot(i){
-        $(page).find('#dots .dot.active').removeClass('active'); //remove all active dots
+        $(page).find('#dots .dot.active').removeClass('active'); //Remove all active dots
         var current = $(page).find('#dots .dot').eq(i);
         current.addClass('active');
      }
 
+    // Call these functions everytime your flip
     slideviewer.on('flip', function(i){
-      doStuff(i);
+      addHome(i);
       addDot(i);
     });
 
-    //* For real adds the content
+    //* Creates the content page
     function source(i) {
       var article = $('<div />');
       article.css('height', '100%');
@@ -86,26 +88,27 @@ App.populator('Perez1', function (page, article) {
 
       //* Article Heading Section
       var heading = $('<h2 />');
-      var head = $('<div />').html(articleData[i].title);
+      var head = $('<div />').html(articleData[i].title); //Need HTML to remove 'escape entities'
       heading.text(head.text());
       heading.clickable().on('click', function (){
-             cards.browser.open(articleData[i].link); 
+             cards.browser.open(articleData[i].link); //Click the headline, open article URL
       });
       heading.css('padding',10);
       articleSection.append(heading);
 
       //* Article Description Section including the Image
-      //var content = $('<p />');
       var descr = $('<div />').html(articleData[i].content);
       descr.find('img').clickable().on('click', function (){
-            cards.browser.open(articleData[i].link); 
+            cards.browser.open(articleData[i].link); //Click the image, open article URL
       });
-      //Finds all the 'children' <p> in the description without an image, adds padding to the text
+
+      //Finds all the 'children' in the description
       descr.children().each(function(i, descrChild){
+        //Finds all the 'children' without an image (<p>) in the description, adds padding to the text
         if ($(this).find('img').length ===0){
           $(this).css('padding',10);
         }
-        //Add default image to articles that have no images
+        //Adds default image to articles that have videos in <span> tags
         if ($(this).find('span').length){
           var imgs = new Image();
           imgs.src = 'img/perez.jpg';
@@ -117,9 +120,22 @@ App.populator('Perez1', function (page, article) {
           $(this).find('iframe').width('100%');
           $(this).find('iframe').height('56%')
         }
+        //Find all the links in the description and override default click behaviour
+        //Think of the bug on iPhone when it would fail to load the card after click
+        if ($(this).find('a')){
+            $(this).find('a').on('click', function(e){
+              e.preventDefault();
+              cards.browser.open($(this).attr("href"));
+            }); 
+        }
+        //Adds default image to articles
+        if ($(descr).find('img').length===0){
+          var imgs = new Image();
+          imgs.src = 'img/perez.jpg';
+          $(descr).prepend(imgs);
+        }
       });
       articleSection.append(descr);
-
       //Actually append all the article elements
       article.append(articleSection);
       article.scrollable();
