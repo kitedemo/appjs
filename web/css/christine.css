@@ -95,6 +95,11 @@
 	color: #696969;
 }
 
+.app-section > :first-child.active {
+	color: #EE1289;
+}
+
+
 
 /******** MISC ***********/
 
