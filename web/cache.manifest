@@ -1,13 +1,25 @@
 CACHE MANIFEST
 
-http://cdn.kik.com/app/1/default.css
-css/styles.css
+CACHE:
+img/bigger-loader.gif
+img/icon.png
+img/perez.jpg
+img/x.png
 
-js/zepto.min.js
 http://cdn.kik.com/cards/0/cards.js
-http://cdn.kik.com/app/1/app.js
-zerver/MyAPI.js
+http://cdn.kik.com/clickable/1.1.0/clickable.js
+js/zepto.js
+js/app.js
+zerver/require.js
+zerver/feedParser.js
+js/dispatcher.js
+js/SlideViewer.js
 js/main.js
 
+css/app.css  
+css/default.css
+css/christine.css
+
 NETWORK:
+
 *
