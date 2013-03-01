@@ -6,7 +6,6 @@ App.populator('Perez1', function (page, article) {
 
   //Pull in content from PerezHilton.com and create an array of articles
   feedParser.getArticles(function (articles){
-    console.log(articles);
     articleData = articles;
     index = articleData[index].index; 
     addContent();
@@ -20,8 +19,6 @@ App.populator('Perez1', function (page, article) {
   }
 
   var addContent = function () {
-    console.log($(page).find('.dot').length);
-
     doStuff(0); //Since on('flip') isn't thrown initially
     addDot(0);
     
@@ -188,8 +185,8 @@ App.populator('fromKikPerez', function (page, linkData) {
   //Since opened from a Kik, no slide viewer, thus force user to go 'Home'
   $(page).find('#home').on('click', function () {
     index=0;
-    App.load('Perez1', articleData[index], function () {//This is a callback:)
-      //When done loading new PErez1, remove from the backstack
+    App.load('Perez1', articleData[index], 'slideoff-down', function () { //This is a callback:)
+      //When done loading new Perez1, remove from the backstack
       try {
         App.removeFromStack(0);
       }
