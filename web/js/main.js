@@ -11,14 +11,15 @@ App.populator('Perez1', function (page, article) {
     index = articleData[index].index; 
     addContent();
   });
-  var addContent = function () {
-    //Adding the dot carousel
-     for (var d=0;d<articleData.length;d++){
-       var newDot= $('<div />');
-       newDot.addClass('dot');
-       $(page).find('#dots').append(newDot);
-    }
+  //Adding the dot carousel - Note: this used to be not hardcoded but loading screen was shitty
+  // Changed to hardcoding to make it better
+   for (var d=0;d<10;d++){
+     var newDot= $('<div />');
+     newDot.addClass('dot');
+     $(page).find('#dots').append(newDot);
+  }
 
+  var addContent = function () {
     console.log($(page).find('.dot').length);
 
     doStuff(0); //Since on('flip') isn't thrown initially
@@ -56,9 +57,8 @@ App.populator('Perez1', function (page, article) {
       if (i===(articleData.length - 1)){
         var home = $('<div />');
         home.addClass('app-button left');
-        //home.text('Home');
         $(page).find('.app-topbar').append(home);
-        home.on('click', function (){
+        home.clickable().on('click', function (){
           slideviewer.setPage(0);
         });
       }
