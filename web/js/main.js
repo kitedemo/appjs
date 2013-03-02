@@ -41,6 +41,34 @@ App.populator('Perez1', function (page, article) {
       var kikImg = $('<div />').html(articleData[j].content).find('img').attr('src');
       var kikLinkData = JSON.stringify(articleData[j]);
 
+      // //Import Thumbnailer for GIF images
+      //  var BASE_URL = 'http://cards-thumbnailer.appspot.com/';
+      //  var testImg = new Image();
+      //  var testImgW;
+      //  var testImgH;
+      //   testImg.onload = function() {
+      //    testImgH = this.height;
+      //    testImgW = this.width;
+      //    console.log('test');
+      //  }
+      // testImg.src = $('<div />').html(articleData[0].content).find('img').attr('src');
+
+      // function getThumbnailURL (kikImg, height, width, quality) {
+      //     if (!height && !width) {
+      //         throw 'height and/or width must be specified';
+      //     }
+
+      //     var thumbURL = BASE_URL;
+
+      //     thumbURL += encodeURIComponent(url) + '?';
+
+      //     thumbURL += 'h=' + (height  || '') + '&';
+      //     thumbURL += 'w=' + (width   || '') + '&';
+      //     thumbURL += 'q=' + (quality || 0 );
+
+      //     return thumbURL;
+      // }
+
       cards.kik.send({
               title    : kikTitle                        ,
               text     : kikDescription                  ,
@@ -149,7 +177,7 @@ App.populator('Perez1', function (page, article) {
 function handleBackButton () {
   if (cards.kik.returnToConversation) {
       // Card was launched by a conversation
-      cards.kik.returnToConversation(); // return to conversation
+      cards.kik.returnToConversation(); // return to Kik conversation
   }
   else{
     return false
@@ -160,7 +188,7 @@ function handleBackButton () {
 // If opened from a Kik message the article may not be in the top 10
 // This should not depend on index for positioning
 App.populator('fromKikPerez', function (page, linkData) {
-  // If on android and opening from a Kik message, handle the back button
+  // If on Android and opening from a Kik message, handle the back button
   var os = cards.utils.platform.os;
   if (os.name === 'android'){
     cards.browser.back(handleBackButton);  
@@ -193,9 +221,22 @@ App.populator('fromKikPerez', function (page, linkData) {
     }
     //Scale the Embedded YouTube video to fit the page
     if ($(this).find('iframe').length){
-      console.log('testing');
       $(this).find('iframe').width('100%');
       $(this).find('iframe').height('56%')
+    }
+    //Find all the links in the description and override default click behaviour
+    //Think of the bug on iPhone when it would fail to load the card after click
+    if ($(this).find('a')){
+        $(this).find('a').on('click', function(e){
+          e.preventDefault();
+          cards.browser.open($(this).attr("href"));
+        }); 
+    }
+    //Adds default image to articles
+    if ($(descr).find('img').length===0){
+      var imgs = new Image();
+      imgs.src = 'img/perez.jpg';
+      $(descr).prepend(imgs);
     }
   });
   //Since opened from a Kik, no slide viewer, thus force user to go 'Home'
