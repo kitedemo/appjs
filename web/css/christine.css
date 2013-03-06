@@ -111,7 +111,7 @@
 /*BOTH - Loading gif when waiting for the content area to load*/
 .loader{
 	height: 100%;
-	background-image: url('../img/bigger-loader.gif');
+	background-image: url(../img/bigger-loader.gif?inline=1);
 	background-repeat: no-repeat;
 	background-position: center;
 }

@@ -5,11 +5,13 @@ var index = 0;
 App.populator('Perez1', function (page, article) {
 
   // Pull in content from PerezHilton.com and create an array of articles
-  feedParser.getArticles(function (articles){
-    console.log(articles);
-    articleData = articles;
-    index = articleData[index].index;  
-    addContent();
+  cards.ready(function () {
+    feedParser.getArticles(function (articles){
+      console.log(articles);
+      articleData = articles;
+      index = articleData[index].index;  
+      addContent();
+    });
   });
   // Adding the dot carousel - Note: this used to be not hardcoded but transitioning 
   // to the loading screen looked awful so changed to hardcoding outside of addContent
@@ -38,7 +40,7 @@ App.populator('Perez1', function (page, article) {
       var j = slideviewer.page(); //index to current page not i
       var kikTitle = $('<div />').html(articleData[j].title).text();
       var kikDescription = $('<div />').html(articleData[j].description).text();
-      var kikImg = $('<div />').html(articleData[j].content).find('img').attr('src');
+      var kikImgURL = $('<div />').html(articleData[j].content).find('img').attr('src');
       var kikLinkData = JSON.stringify(articleData[j]);
 
       // //Import Thumbnailer for GIF images
@@ -49,11 +51,10 @@ App.populator('Perez1', function (page, article) {
       //   testImg.onload = function() {
       //    testImgH = this.height;
       //    testImgW = this.width;
-      //    console.log('test');
       //  }
-      // testImg.src = $('<div />').html(articleData[0].content).find('img').attr('src');
+      // //testImg.src = $('<div />').html(articleData[0].content).find('img').attr('src');
 
-      // function getThumbnailURL (kikImg, height, width, quality) {
+      // function getThumbnailURL (img, height, width, quality) {
       //     if (!height && !width) {
       //         throw 'height and/or width must be specified';
       //     }
@@ -61,18 +62,19 @@ App.populator('Perez1', function (page, article) {
       //     var thumbURL = BASE_URL;
 
       //     thumbURL += encodeURIComponent(url) + '?';
-
       //     thumbURL += 'h=' + (height  || '') + '&';
       //     thumbURL += 'w=' + (width   || '') + '&';
       //     thumbURL += 'q=' + (quality || 0 );
 
       //     return thumbURL;
       // }
+      // var img = new Image();
+      // img.src = getThumbnailURL(kikImgURL, testImgH, testImgW, 1);
 
       cards.kik.send({
               title    : kikTitle                        ,
               text     : kikDescription                  ,
-              pic      : kikImg                          ,
+              pic      : img                            ,
               big      : false                           , 
               linkData : kikLinkData
             });
