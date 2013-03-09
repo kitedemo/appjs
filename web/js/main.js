@@ -37,44 +37,17 @@ App.populator('Perez1', function (page, article) {
 
     //* Adding the send Kik button
     $(page).find('#kik').on('click', function (){
-      var j = slideviewer.page(); //index to current page not i
-      var kikTitle = $('<div />').html(articleData[j].title).text();
-      var kikDescription = $('<div />').html(articleData[j].description).text();
-      var kikImgURL = $('<div />').html(articleData[j].content).find('img').attr('src');
-      var kikLinkData = JSON.stringify(articleData[j]);
-
-      // //Import Thumbnailer for GIF images
-      //  var BASE_URL = 'http://cards-thumbnailer.appspot.com/';
-      //  var testImg = new Image();
-      //  var testImgW;
-      //  var testImgH;
-      //   testImg.onload = function() {
-      //    testImgH = this.height;
-      //    testImgW = this.width;
-      //  }
-      // //testImg.src = $('<div />').html(articleData[0].content).find('img').attr('src');
-
-      // function getThumbnailURL (img, height, width, quality) {
-      //     if (!height && !width) {
-      //         throw 'height and/or width must be specified';
-      //     }
-
-      //     var thumbURL = BASE_URL;
-
-      //     thumbURL += encodeURIComponent(url) + '?';
-      //     thumbURL += 'h=' + (height  || '') + '&';
-      //     thumbURL += 'w=' + (width   || '') + '&';
-      //     thumbURL += 'q=' + (quality || 0 );
-
-      //     return thumbURL;
-      // }
-      // var img = new Image();
-      // img.src = getThumbnailURL(kikImgURL, testImgH, testImgW, 1);
+     var j = slideviewer.page(); //index to current page not i
+     var kikTitle = $('<div />').html(articleData[j].title).text();
+     var kikDescription = $('<div />').html(articleData[j].description).text();
+     var kikImg = $('<div />').html(articleData[j].content).find('img').attr('src');
+     //var kikImg = 'img/perez.jpg';
+     var kikLinkData = JSON.stringify(articleData[j]);
 
       cards.kik.send({
               title    : kikTitle                        ,
               text     : kikDescription                  ,
-              pic      : img                            ,
+              pic      : kikImg                          ,
               big      : false                           , 
               linkData : kikLinkData
             });
