@@ -103,9 +103,6 @@ App.populator('Perez1', function (page, article) {
 
       //* Article Description Section including the Image
       var descr = $('<div />').html(articleData[i].content);
-      descr.find('img').clickable().on('click', function (){
-            cards.browser.open(articleData[i].link); //Click the image, open article URL
-      });
 
       //Finds all the 'children' in the description
       descr.children().each(function(i, descrChild){
@@ -115,15 +112,18 @@ App.populator('Perez1', function (page, article) {
         }
         //Adds default image to articles that have videos in <span> tags
         if ($(this).find('span').length){
-          var imgs = new Image();
-          imgs.src = 'img/video_icon.pngs';
+          var imgs = $('<img />');
+          imgs.attr('src', 'img/pink_video.jpeg');
+          //imgs.attr('width', );
+          imgs.attr('height', '30%');
           $(this).find('span').replaceWith(imgs);
+
         }
         //Scale the Embedded YouTube video to fit the page
         if ($(this).find('iframe').length){
           console.log('testing');
           $(this).find('iframe').width('100%');
-          $(this).find('iframe').height('56%')
+          $(this).find('iframe').height('56%');
         }
         //Find all the links in the description and override default click behaviour
         //Think of the bug on iPhone when it would fail to load the card after click
@@ -140,6 +140,12 @@ App.populator('Perez1', function (page, article) {
           $(descr).prepend(imgs);
         }
       });
+    // For any images that were added, make them clickable to the article
+    descr.find('img').clickable().on('click', function (){
+          cards.browser.open(articleData[i].link); //Click the image, open article URL
+    });
+
+
       articleSection.append(descr);
       //Actually append all the article elements
       article.append(articleSection);

@@ -197,3 +197,8 @@ p {
 	max-width: 100%;
 }
 
+.centeredImage
+{
+	text-align:center;
+	display:block;
+}
