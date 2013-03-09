@@ -5,6 +5,7 @@ var index = 0;
 App.populator('Perez1', function (page, article) {
 
   // Pull in content from PerezHilton.com and create an array of articles
+  // But only do so once the card is ready
   cards.ready(function () {
     feedParser.getArticles(function (articles){
       console.log(articles);
@@ -13,6 +14,7 @@ App.populator('Perez1', function (page, article) {
       addContent();
     });
   });
+
   // Adding the dot carousel - Note: this used to be not hardcoded but transitioning 
   // to the loading screen looked awful so changed to hardcoding outside of addContent
    for (var d=0;d<10;d++){
@@ -114,7 +116,7 @@ App.populator('Perez1', function (page, article) {
         //Adds default image to articles that have videos in <span> tags
         if ($(this).find('span').length){
           var imgs = new Image();
-          imgs.src = 'img/perez.jpg';
+          imgs.src = 'img/video_icon.pngs';
           $(this).find('span').replaceWith(imgs);
         }
         //Scale the Embedded YouTube video to fit the page
@@ -149,10 +151,11 @@ App.populator('Perez1', function (page, article) {
 
 });
 
+//* If opened on an Android device should handle the physical back button
 function handleBackButton () {
   if (cards.kik.returnToConversation) {
-      // Card was launched by a conversation
-      cards.kik.returnToConversation(); // return to Kik conversation
+      // Card was launched by a conversation, return to the Kik convo
+      cards.kik.returnToConversation();
   }
   else{
     return false
@@ -169,7 +172,7 @@ App.populator('fromKikPerez', function (page, linkData) {
     cards.browser.back(handleBackButton);  
   }
 
-  //Create the same UI as the slide viewer page
+  //* Same UI as the Perez slide viewer page
   $(page).find('#headline').html(linkData.title);
   var descr = $('<div />').html(linkData.content);
   var img = descr.find('img');
@@ -244,6 +247,8 @@ App.populator('fromKikPerez', function (page, linkData) {
 }, function(page, linkData){ //Destructor for the fromKikPerez Populator
     var os = cards.utils.platform.os;
     if (os.name === 'android'){
+      //Once you dismiss the fromKikPerez viewer we don't want to return to
+      //the previous conversation, so need to unbindBack
       cards.browser.unbindBack(handleBackButton);
     }
 });
