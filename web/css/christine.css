@@ -199,6 +199,7 @@ p {
 
 .centeredImage
 {
-	text-align:center;
-	display:block;
+	text-align: center;
+	display: inline-block;
+	width: 150px;
 }

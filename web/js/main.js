@@ -114,9 +114,11 @@ App.populator('Perez1', function (page, article) {
         if ($(this).find('span').length){
           var imgs = $('<img />');
           imgs.attr('src', 'img/pink_video.jpeg');
-          //imgs.attr('width', );
-          imgs.attr('height', '30%');
+          imgs.addClass('centeredImage');
+          //imgs.css('width', '100px');
+          //imgs.attr('height', '30%');
           $(this).find('span').replaceWith(imgs);
+          imgs.parent().css('text-align', 'center');
 
         }
         //Scale the Embedded YouTube video to fit the page
@@ -140,7 +142,7 @@ App.populator('Perez1', function (page, article) {
           $(descr).prepend(imgs);
         }
       });
-    // For any images that were added, make them clickable to the article
+    // For all images in description, make them clickable to the article
     descr.find('img').clickable().on('click', function (){
           cards.browser.open(articleData[i].link); //Click the image, open article URL
     });
