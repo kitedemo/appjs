@@ -3,7 +3,6 @@ var articleData = [];
 var index = 0;
 
 App.populator('Perez1', function (page, article) {
-
   // Pull in content from PerezHilton.com and create an array of articles
   // But only do so once the card is ready
   cards.ready(function () {
@@ -34,7 +33,7 @@ App.populator('Perez1', function (page, article) {
     reload.clickable().on('click', function (){
       //slideviewer.setPage(0);
       index=0;
-      App.load('Perez1', articleData[index], 'slideoff-down', function () { //This is a callback:)
+      App.load('Perez1', articleData[index], 'slide-right', function () { //This is a callback:)
         //When done loading new Perez1, remove from the backstack
         try {
           App.removeFromStack(0);
@@ -141,18 +140,17 @@ App.populator('Perez1', function (page, article) {
           imgs.src = 'img/perez.jpg';
           $(descr).prepend(imgs);
         }
-      });
+    });
     // For all images in description, make them clickable to the article
     descr.find('img').clickable().on('click', function (){
           cards.browser.open(articleData[i].link); //Click the image, open article URL
     });
 
-
-      articleSection.append(descr);
-      //Actually append all the article elements
-      article.append(articleSection);
-      article.scrollable();
-      return article[0];
+    articleSection.append(descr);
+    //Actually append all the article elements
+    article.append(articleSection);
+    article.scrollable();
+    return article[0];
     }
   }
 }, function (page, article) {// Destructor for Perez
@@ -163,17 +161,6 @@ App.populator('Perez1', function (page, article) {
     cards.browser.unbindBack(handleBackButton);
   }
 });
-
-//* If opened on an Android device should handle the physical back button
-function handleBackButton () {
-  if (cards.kik.returnToConversation) {
-      // Card was launched by a conversation, return to the Kik convo
-      cards.kik.returnToConversation();
-  }
-  else{
-    return false
-  };
-}
 
 // fromKikPerez Viewer
 // If opened from a Kik message the article may not be in the top 10
@@ -236,7 +223,7 @@ App.populator('fromKikPerez', function (page, linkData) {
     App.load('Perez1', articleData[index], 'slideoff-down', function () { //This is a callback:)
       //When done loading new Perez1, remove from the backstack
       try {
-        //App.removeFromStack(0);
+        App.removeFromStack(0);
       }
       catch (err) {}
     });
@@ -266,13 +253,31 @@ App.populator('fromKikPerez', function (page, linkData) {
     }
 });
 
+//* If opened on an Android device should handle the physical back button
+function handleBackButton () {
+  if (cards.kik.returnToConversation) {
+      // Card was launched by a conversation, return to the Kik convo
+      cards.kik.returnToConversation();
+  }
+  else{
+    return false
+  };
+}
 
-// If opened from a card open the "PerezViewer"
+// If opened from a Kik Message then open the "PerezViewer"
 if (cards.browser && cards.browser.linkData) {
   // Card was launched by a conversation
   App.load('fromKikPerez', cards.browser.linkData);
 }
-//Otherwise use the list of articles
+//Otherwise use default Perez
 else {
-  App.load('Perez1', articleData[0]);
+  try {
+    console.log('testing');
+    // try to restore previous session
+    App.restore();
+  }
+  catch (err) {
+    // else start from scratch
+    App.load('Perez1', articleData[0]);
+  }
 }
