@@ -271,13 +271,5 @@ if (cards.browser && cards.browser.linkData) {
 }
 //Otherwise use default Perez
 else {
-  try {
-    console.log('testing');
-    // try to restore previous session
-    App.restore();
-  }
-  catch (err) {
-    // else start from scratch
     App.load('Perez1', articleData[0]);
-  }
 }
