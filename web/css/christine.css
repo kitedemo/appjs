@@ -24,7 +24,7 @@
 	text-shadow: none;
 }
 
-/*TOP BAR LEFT BUTTON - Custom UI for end of list "home" button since it was overlapping*/
+/*TOP BAR LEFT BUTTON - Custom UI for end of list "home" button since it was overlapping
 .app-topbar .app-button.left {
 	margin:0px;
 	padding: 0px;
@@ -44,7 +44,8 @@
 	-moz-border-radius: 0px;
 
 }
-/*AND - TOP BAR LEFT BUTTON/HOME - Use custom home button that is the same as Android < */
+
+/*AND - TOP BAR LEFT BUTTON/HOME - Use custom home button that is the same as Android < 
 .app-android .app-topbar .app-button.left {
 	padding: 0;
 	height: 100%;
@@ -55,7 +56,7 @@
 	-webkit-background-size: 8px 14px;
 	background-size: 8px 14px;
 	color: transparent;
-}
+}*/
 
 /*iOS - TOP BAR BUTTONS - Make top bar buttons more like Android*/
 .app-ios .app-topbar .app-button.right{
@@ -72,19 +73,52 @@
 	line-height: 44px;
 }
 
-/* - SELECTED STATE - Change the selected state of the left top bar button*/
+/* - SELECTED STATE - Change the selected state of the left top bar button
 .app-ios .app-topbar .app-button.active.left {
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAcCAMAAABf788oAAAAjVBMVEUiIiIjIyMrKysqKioAAACdnZ0mJiYnJyednZ0kJCQoKCgsLCwlJSXLy8vPz8/MzMzJycnNzc3Ozs7GxsagoKCjo6O3t7exsbHIyMisrKzAwMDExMS+vr6ysrLHx8fKysq0tLStra27u7urq6unp6fBwcGoqKjDw8Ourq66urq9vb2fn5/FxcWwsLClpaWY7qkYAAAADXRSTlMAAAAAADMAAJkAAAAAOhxptwAAAMVJREFUeF5d0dVuBTEMBNCZvUWY0OLFMsP/f15lxWqb5i1HijO2cYR6zndKKfWDA7EuksIeFcjVNkv5uaMDPoOkco8KxNkhSmVHwmEKkjSiAjFeW8UJhMNdkOLh2IF4yFbxBYQBebopUtmcsIJnil8gYIBVn6XwCsJhDlJOww8Mi2Xa290hGcy/gJt/T9D1sSlK3IbmW/LisQkG4qmJDhBvxZtzwKim/WZADu9LM0LQGpLKGnRg92Fr2F7y76KiL6qeK1/lN9FpDuyoOMUMAAAAAElFTkSuQmCC);
 	background-color: rgba(0, 0, 0, 0.2);
-}
+}*/
 
-/* - SELECTED STATE - Change the selected state of the left top bar button*/
+/* - SELECTED STATE - Change the selected state of the left top bar button
 .app-topbar .app-button.active.left {
 	background-color: rgba(0, 0, 0, 0.2);
-}
+}*/
 /* - SELECTED STATE - Change the selected state of the right top bar button*/
 .app-page .app-topbar .app-button.active.right {
 	background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* - RELOAD Button in the top bar*/ 
+.app-page .app-topbar .app-button.reload{
+	padding: 0;
+	height: 100%;
+	width: 44px;
+	background-image: url(../img/x.png);
+	background-position: 8px center;
+	background-repeat: no-repeat;
+	background-size: 40% 40%;
+	color: transparent;
+	-webkit-box-shadow: none;;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border: none;
+}
+
+/*AND - TOP BAR ADJUSTMENTS FOR RELOAD BUTTON - Make button bigger since it was overlapping*/
+.app-android .app-topbar .app-button.left {
+	width: 48px;
+}
+
+/* - RELOAD SELECTED STATE - Change the selected state of the left top bar button*/
+.app-topbar .app-button.reload.active {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+/*AND - Move App Title a bit so it doesn't overlap with the reload button*/
+.app-android .app-title{
+	padding: 0 12px 0 40px;
 }
 
 /******** APP CONTENT ***********/
@@ -98,8 +132,6 @@
 .app-section > :first-child.active {
 	color: #EE1289;
 }
-
-
 
 /******** MISC ***********/
 

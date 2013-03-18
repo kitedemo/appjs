@@ -8,7 +8,7 @@ App.populator('Perez1', function (page, article) {
   // But only do so once the card is ready
   cards.ready(function () {
     feedParser.getArticles(function (articles){
-      console.log(articles);
+      //console.log(articles);
       articleData = articles;
       index = articleData[index].index;  
       addContent();
@@ -24,9 +24,25 @@ App.populator('Perez1', function (page, article) {
   }
 
   var addContent = function () {
-    addHome(0); //Since on('flip') isn't thrown initially for page0
+    //Since on('flip') isn't thrown initially for page0
     addDot(0);
     
+    // Add a "reload" feed button
+    var reload = $('<div />');
+    reload.addClass('app-button reload');
+    $(page).find('.app-topbar').append(reload);
+    reload.clickable().on('click', function (){
+      //slideviewer.setPage(0);
+      index=0;
+      App.load('Perez1', articleData[index], 'slideoff-down', function () { //This is a callback:)
+        //When done loading new Perez1, remove from the backstack
+        try {
+          App.removeFromStack(0);
+        }
+        catch (err) {}
+      });
+    });
+
     var wrapper = page.querySelector('.wrapper');
     wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
     //* Create the slideview
@@ -55,21 +71,6 @@ App.populator('Perez1', function (page, article) {
             });
     });
 
-    //* Adding 'Home' if you flip to the last page
-    function addHome(i){
-      if (i===(articleData.length - 1)){
-        var home = $('<div />');
-        home.addClass('app-button left');
-        $(page).find('.app-topbar').append(home);
-        home.clickable().on('click', function (){
-          slideviewer.setPage(0);
-        });
-      }
-      else{
-        $(page).find('.app-topbar .app-button.left').remove();
-      }
-    }
-
     //* Adding active dot for the page your on
      function addDot(i){
         $(page).find('#dots .dot.active').removeClass('active'); //Remove all active dots
@@ -79,7 +80,6 @@ App.populator('Perez1', function (page, article) {
 
     // Call these functions everytime your flip
     slideviewer.on('flip', function(i){
-      addHome(i);
       addDot(i);
     });
 
@@ -156,7 +156,12 @@ App.populator('Perez1', function (page, article) {
     }
   }
 }, function (page, article) {// Destructor for Perez
-
+  var os = cards.utils.platform.os;
+  if (os.name === 'android'){
+    //Once you dismiss the fromKikPerez viewer we don't want to return to
+    //the previous conversation, so need to unbindBack
+    cards.browser.unbindBack(handleBackButton);
+  }
 });
 
 //* If opened on an Android device should handle the physical back button
@@ -231,7 +236,7 @@ App.populator('fromKikPerez', function (page, linkData) {
     App.load('Perez1', articleData[index], 'slideoff-down', function () { //This is a callback:)
       //When done loading new Perez1, remove from the backstack
       try {
-        App.removeFromStack(0);
+        //App.removeFromStack(0);
       }
       catch (err) {}
     });
