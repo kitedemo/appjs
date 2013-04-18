@@ -1,4 +1,4 @@
-var SlideViewer = (function (Zepto, jQuery) {
+SlideViewer = (function (Zepto, jQuery) {
 	var defaultOpts = {
 		// Should we allow scrolling in scrollable
 		// regions inside or outside of the slideviewer?
@@ -15,15 +15,23 @@ var SlideViewer = (function (Zepto, jQuery) {
 		// source function being called more times
 		// than necessary.
 		startAt: 0,
+		// How far from the point of initial contact does the user
+		// have to move their fingers before we interpret their
+		// action?
+		bufferDist: 10,
+		// What should we show to the user when the generator threw
+		// an error or returned an invalid output? You can override
+		// this when shipping your application, so that in the event
+		// something does go wrong in your code, you can show a
+		// friendlier error page.
+		errorGenerator: defaultErrorGenerator,
 	}
 
-	// Wrapper is an element which will contain the
-	// slideviewer. It should have an explict height
-	// (and width, if not display: block) set.
-	// Source is a generator function. Given a page
-	// index, it should return an element to use
-	// as the slide for that page index.
-	function SlideViewer (wrapper, source, opts) {
+	// Wrapper is an element which will contain the slideviewer. It should
+	// have an explict height (and width, if not display: block) set.
+	// Source is a generator function. Given a page index, it should
+	// return an element to use as the slide for that page index.
+	function SlideViewer(wrapper, source, opts) {
 		var self = this;
 		var slider;
 		var masters = [];
@@ -32,24 +40,31 @@ var SlideViewer = (function (Zepto, jQuery) {
 		var minX = 0;
 		var snapThreshold = 0;
 		var pageWidth = 0;
-		var inputhandler = new InputHandler(vendor);
+		var inputhandler = new InputHandler();
 
-		if (typeof source !== 'function') {
-			throw "SlideViewer second argument should be a generator function!";
-		}
+		function validateArgs() {
+			if (!isElement(wrapper)) {
+				throw TypeError("SlideViewer first argument should be a DOM node which wraps the slider. Got " + wrapper);
+			}
+			if (typeof source !== 'function') {
+				throw TypeError("SlideViewer second argument should be a generator function!");
+			}
 
-		if (opts === undefined) opts = {};
-		for (var opt in defaultOpts) {
-			if (opts[opt] === undefined) {
-				opts[opt] = defaultOpts[opt];
+			opts = opts || {};
+			for (var opt in defaultOpts) {
+				if (opts[opt] === undefined) {
+					opts[opt] = defaultOpts[opt];
+				}
 			}
 		}
+		validateArgs();
 
 		var len = opts.length;
 		var page = opts.startAt;
 
-		function init () {
+		function init() {
 			wrapper.style.postition = 'relative';
+			wrapper.innerHTML = '';
 
 			slider = document.createElement('div');
 			var s = slider.style;
@@ -76,7 +91,7 @@ var SlideViewer = (function (Zepto, jQuery) {
 			inputhandler.attach(wrapper, slider);
 			inputhandler.on('start', onStart);
 			inputhandler.on('resize', self.refreshSize);
-			dispatcher.on('destroy', function () {
+			eventBus.on('destroy', function () {
 				inputhandler.detach();
 			});
 
@@ -84,9 +99,9 @@ var SlideViewer = (function (Zepto, jQuery) {
 			self.setPage(opts.startAt);
 		}
 
-		var dispatcher = new Dispatcher();
-		self.on = dispatcher.on;
-		self.off = dispatcher.off;
+		var eventBus = new EventBus();
+		self.on = eventBus.on;
+		self.off = eventBus.off;
 
 		self.refreshSize = function () {
 			pageWidth = wrapper.clientWidth;
@@ -110,7 +125,7 @@ var SlideViewer = (function (Zepto, jQuery) {
 		var prevPage = -1;
 		self.setPage = function (newPage) {
 			if (typeof newPage !== 'number') {
-				throw "SlideViewer.setPage() requires a number! ('" + newPage + "' given)";
+				throw TypeError("SlideViewer.setPage() requires a number! ('" + newPage + "' given)");
 			}
 			function positionMasters(a, b, c) {
 				var m = masters;
@@ -129,9 +144,9 @@ var SlideViewer = (function (Zepto, jQuery) {
 				if (page === len - 1) sc.visibility = 'hidden';
 				else sc.visibility = 'visible';
 
-				m[a].newPage = page === 0 ? len - 1 : page - 1;
+				m[a].newPage = page - 1;
 				m[b].newPage = page;
-				m[c].newPage = page === len - 1 ? 0 : page + 1;
+				m[c].newPage = page + 1;
 			}
 			page = clamp(newPage, 0, len - 1);
 			setTransitionDuration(0);
@@ -152,13 +167,15 @@ var SlideViewer = (function (Zepto, jQuery) {
 				if (m.newPage == m.page) continue;
 
 				m.elm.innerHTML = '';
-				m.elm.appendChild(getElement(m.newPage));
+				if (m.newPage >= 0 && m.newPage < opts.length) {
+					m.elm.appendChild(getElement(m.newPage));
+				}
 
 				m.page = m.newPage;
 			}
 
 			if (prevPage !== newPage) {
-				dispatcher.fire('flip', newPage, masters[activeMaster].elm);
+				eventBus.fire('flip', newPage, masters[activeMaster].elm);
 				prevPage = newPage;
 			}
 
@@ -169,7 +186,7 @@ var SlideViewer = (function (Zepto, jQuery) {
 			for (var i = 0; i < 3; i++) {
 				if (masters[i].page == page) return masters[i].elm;
 			}
-			throw "No master is displaying our current page. This is a bug! Current page: " + i + ", masters: " + JSON.serialize(masters);
+			throw Error("No master is displaying our current page. This is a bug! Current page: " + i + ", masters: " + JSON.serialize(masters));
 		}
 
 		self.eachMaster = function (cb) {
@@ -185,7 +202,7 @@ var SlideViewer = (function (Zepto, jQuery) {
 		}
 
 		self.destroy = function () {
-			dispatcher.fire('destroy');
+			eventBus.fire('destroy');
 			return self;
 		}
 
@@ -214,7 +231,16 @@ var SlideViewer = (function (Zepto, jQuery) {
 			setPos(xPos);
 		}
 
-		function setPos (x) {
+		// Note that 3d is enabled by default. This should only be used in
+		// conjuction with the disable3d() method above.
+		self.enable3d = function () {
+			use3dAcceleration = true;
+			setPos(xPos);
+		}
+
+		function setPos(x, cb) {
+// 			console.log("setting position to ", x);
+			var unchanged = x === xPos;
 			var transform = prefixStyle('transform');
 			xPos = x;
 			// translateZ(0) does not affect our appearance, but hints to the
@@ -228,15 +254,26 @@ var SlideViewer = (function (Zepto, jQuery) {
 				slider.style[transform] = '';
 				slider.style.left = x + 'px';
 			}
+
+			if (cb) {
+				if (unchanged || !supportsTransitions) {
+					// We don't get a transitionEnd event if
+					// 1) The animated property is unchanged, or
+					// 2) The browser doesn't support transitions (duh)
+					cb();
+				} else {
+					inputhandler.on('transitionEnd', cb);
+				}
+			}
 		}
 
-		function setTransitionDuration(t) {
+		function setTransitionDuration(t, cb) {
 			slider.style[prefixStyle('transitionDuration')] = t + 'ms';
 		}
 
 		var startedMoving = false;
 		var directionLocked = false;
-		function onStart (point) {
+		function onStart(point) {
 			inputhandler.off('start');
 			inputhandler.on('end', onEndNoMove);
 
@@ -250,7 +287,7 @@ var SlideViewer = (function (Zepto, jQuery) {
 			setTransitionDuration(0);
 			inputhandler.on('move', onMove);
 
-			function onMove (e, point) {
+			function onMove(e, point) {
 				var dx = point.pageX - prevX;
 				prevX = point.pageX;
 				prevY = point.pageY;
@@ -262,7 +299,7 @@ var SlideViewer = (function (Zepto, jQuery) {
 				// was most likely intended for our consumption.
 				// (and not just the start of a zoom operation
 				// or other gesture).
-				if (absX < 50 && absY < 50 && !startedMoving) {
+				if (!startedMoving && absX < opts.bufferDist && absY < opts.bufferDist) {
 					return;
 				}
 				startedMoving = true;
@@ -284,13 +321,12 @@ var SlideViewer = (function (Zepto, jQuery) {
 				e.preventDefault();
 				inputhandler.off('end').on('end', onEnd);
 				setPos(newX);
-				dispatcher.fire('move', newX);
+				eventBus.fire('move', newX);
 			}
 
-			function onEnd (point) {
+			function onEnd(point) {
 				inputhandler.off('move');
 				inputhandler.off('end');
-				inputhandler.on('transitionEnd', onTransitionEnd);
 
 				prevX = point.pageX;
 				var deltaX = prevX - startX;
@@ -304,14 +340,7 @@ var SlideViewer = (function (Zepto, jQuery) {
 					setTransitionDuration(time);
 
 					newX = -page * pageWidth;
-					if (newX == xPos) {
-						// Many browsers don't give us the transitionEnd event if the
-						// start and end states of the transition are the same. Thus,
-						// we just fire it immediately.
-						onTransitionEnd();
-					} else {
-						setPos(newX);
-					}
+					setPos(newX, onTransitionEnd);
 					return;
 				}
 
@@ -323,113 +352,97 @@ var SlideViewer = (function (Zepto, jQuery) {
 
 				newX = -page * pageWidth;
 
-				var time = Math.floor(500 * Math.abs(xPos - newX) / pageWidth);
+				var time = Math.floor(200 * Math.abs(xPos - newX) / pageWidth);
 				setTransitionDuration(time);
 
-				setPos(newX);
+				setPos(newX, onTransitionEnd);
 			}
 
-			function onEndNoMove () {
+			function onEndNoMove() {
 				inputhandler.off('move');
 				inputhandler.off('end');
 				inputhandler.on('start', onStart);
 			}
 
-			function onTransitionEnd (e) {
+			function onTransitionEnd() {
 				inputhandler.off('transitionEnd');
 				self.setPage(page);
 				inputhandler.on('start', onStart);
 			}
 		}
 
-		function getElement (i) {
-			function errorPage(customMessage) {
-				var err = document.createElement('p');
-				err.innerHTML = "There was an error creating this page! Contact the developer for more information..." + "<br><br>" + customMessage;
-				return err;
-			}
-
-			var element = null;
+		function getElement(i) {
+			var element;
 			try {
 				element = source(i);
 			} catch (e) {
-				return errorPage("Exception returned from source() function with input " + i + ". Message: " + e);
+				var err = Error("Exception returned from source() function with input " + i + ". Message: " + e.message);
+				err.original = e;
+				return opts.errorGenerator(err);
 			}
 
-			if (isElement(element)) {
-				return element;
-			} else {
-				return errorPage("Invalid type returned from source() function. Got type " + typeof element + " (with value " + element + "), expected string or node. Input was " + i);
+			// In case they return us a zepto or jQuery
+			// object rather than a raw DOM node
+			if (!isElement(element) && element.length) {
+				element = element[0];
 			}
+
+			if (!isElement(element)) {
+				var err = TypeError("Invalid type returned from source() function. Got type " + typeof element + " (with value " + element + "), expected HTMLElement. Input was " + i);
+				return opts.errorGenerator(err);
+			}
+
+			return element;
 		}
 
 		init();
 	};
-	function Touch(domTouch) {
-		var self = this;
-		self.x = domTouch.pageX;
-		self.y = domTouch.pageY;
-		self.id = domTouch.identifier;
-	}
 
-	function Touchable(elm, opts) {
-		var self = this;
+	SlideViewer.needsPreventDefaultHack = (function () {
+		var match = /\bAndroid (\d+(\.\d+)?)/.exec(navigator.userAgent);
+		if (!match) return false;
 
-		var listeners = [];
-		function attach(elm, ev, cb) {
-			listeners.push({elm: elm, ev: ev, cb: cb});
-			elm.addEventListener(ev, cb, false);
-		}
+		var version = parseFloat(match[1]);
+		if (version >= 4.1) return false;
 
-		attach(elm, 'touchstart', onTouchStart);
-		attach(elm, 'touchmove', onTouchMove);
-		attach(elm, 'touchend', onTouchEnd);
-		attach(elm, 'touchcancel', onTouchEnd);
+		return true;
+	}());
 
-		var fingers = [];
-		var numTouches = 0;
-		var currentHand;
-
-		function onTouchStart(ev) {
-			currentHand.fire('end');
-			numTouches++;
-			currentHand = new Hand(numTouches);
-		}
-
-		self.destroy = function () {
-			for (var i = 0; i < listeners.length; i++) {
-				var l = listeners[i];
-				l.elm.removeEventListener(l.ev, l.cb, false);
+	function defaultErrorGenerator(err) {
+		if (window.console && console.error) {
+			if (err.original) {
+				console.error(err.original);
+				console.log(err.original.stack);
+			} else {
+				console.error(err);
+				console.log(err.stack);
 			}
 		}
-
-		var dispatcher = new Dispatcher();
-		self.on = dispatcher.on;
-		self.off = dispatcher.off;
+		var elm = document.createElement('p');
+		elm.innerHTML = "There was an error creating this page! Contact the developer for more information." +
+			"<br><br>" + err.message + "<br><br>" +
+			"If you are the developer, this means you made a mistake in your source() function. If you want to ensure users never see this page, you can override opts.errorGenerator to generate a more user-friendly error page.";
+		return elm;
 	}
 
-
-	function InputHandler (vendor) {
+	function InputHandler() {
 		var self = this;
 		var hasTouch = 'ontouchstart' in window;
+		var transitionEndMapping = {
+			''			: 'transitionend',
+			'webkit'	: 'webkitTransitionEnd',
+			'Moz'		: 'transitionend',
+			'O'			: 'oTransitionEnd',
+			'ms'		: 'MSTransitionEnd'
+		};
+
+		var transitionEndEvent = transitionEndMapping[vendor];
 		var resizeEvent = 'onorientationchange' in window ? 'orientationchange' : 'resize';
-		var startEvent = hasTouch ? 'touchstart' : 'mousedown';
-		var moveEvent = hasTouch ? 'touchmove' : 'mousemove';
-		var endEvent = hasTouch ? 'touchend' : 'mouseup';
+		var startEvent  = hasTouch ? 'touchstart'  : 'mousedown';
+		var moveEvent   = hasTouch ? 'touchmove'   : 'mousemove';
+		var endEvent    = hasTouch ? 'touchend'    : 'mouseup';
 		var cancelEvent = hasTouch ? 'touchcancel' : 'mouseout';
-		var transitionEndEvent = (function () {
-			if ( vendor === false ) return false;
 
-								  var transitionEnd = {
-									  ''			: 'transitionend',
-							'webkit'	: 'webkitTransitionEnd',
-							'Moz'		: 'transitionend',
-							'O'			: 'oTransitionEnd',
-							'ms'		: 'MSTransitionEnd'
-								  };
-
-								  return transitionEnd[vendor];
-		})();
 		var lastTouch;
 		var touchDisabled = false;
 
@@ -440,12 +453,21 @@ var SlideViewer = (function (Zepto, jQuery) {
 			return null;
 		}
 
-		function handleEvent (e) {
+		function handleEvent(e) {
 			var t = e.type;
 			if (t == resizeEvent) {
-				dispatcher.fire('resize', e);
+				eventBus.fire('resize', e);
+				return;
 			} else if (t == transitionEndEvent) {
-				dispatcher.fire('transitionEnd', e);
+				eventBus.fire('transitionEnd', e);
+				return;
+			}
+
+			if ((t === startEvent || t === moveEvent) && SlideViewer.needsPreventDefaultHack) {
+				// Kills native scrolling, but lets our slider work properly.
+				// See http://code.google.com/p/android/issues/detail?id=19827
+				// and http://code.google.com/p/android/issues/detail?id=5491
+				e.preventDefault();
 			}
 
 			if (touchDisabled) {
@@ -461,35 +483,35 @@ var SlideViewer = (function (Zepto, jQuery) {
 					if (lastTouch) return;
 				   lastTouch = e.changedTouches[0];
 				}
-				dispatcher.fire('start', hasTouch ? e.changedTouches[0] : e);
+				eventBus.fire('start', hasTouch ? e.changedTouches[0] : e);
 			} else if (t == moveEvent) {
 				if (!hasTouch) {
-					dispatcher.fire('move', e, e);
+					eventBus.fire('move', e, e);
 					return
 				}
 
 				var touch = findTouch(e.touches, touchID);
 				lastTouch = touch;
-				dispatcher.fire('move', e, touch);
+				eventBus.fire('move', e, touch);
 			} else if (t == cancelEvent || t == endEvent) {
 				if (!hasTouch) {
-					dispatcher.fire('end', e);
+					eventBus.fire('end', e);
 					return;
 				}
 
 				if (!lastTouch) return;
 
-				   var touch = findTouch(e.changedTouches, touchID);
+				var touch = findTouch(e.changedTouches, touchID);
 				if (!touch) touch = findTouch(e.touches, touchID);
 
-				   dispatcher.fire('end', touch);
+				eventBus.fire('end', touch);
 				lastTouch = null;
 			}
 		}
 
-		var dispatcher = new Dispatcher();
-		self.on = dispatcher.on;
-		self.off = dispatcher.off;
+		var eventBus = new EventBus();
+		self.on = eventBus.on;
+		self.off = eventBus.off;
 
 		var wrapper;
 		var slider;
@@ -497,53 +519,118 @@ var SlideViewer = (function (Zepto, jQuery) {
 			if (wrapper || slider) self.detach();
 			wrapper = newWrapper;
 			slider = newSlider;
+
 			window.addEventListener(resizeEvent, handleEvent, false);
-			wrapper.addEventListener(startEvent, handleEvent, false);
-			wrapper.addEventListener(moveEvent, handleEvent, false);
-			wrapper.addEventListener(endEvent, handleEvent, false);
-			wrapper.addEventListener(cancelEvent, handleEvent, false);
 			slider.addEventListener(transitionEndEvent, handleEvent, false);
+
+			wrapper.addEventListener(startEvent , handleEvent, false);
+			wrapper.addEventListener(moveEvent  , handleEvent, false);
+			wrapper.addEventListener(endEvent   , handleEvent, false);
+			wrapper.addEventListener(cancelEvent, handleEvent, false);
+
 			return self;
 		}
 
 		self.detach = function () {
 			window.removeEventListener(resizeEvent, handleEvent, false);
-			wrapper.removeEventListener(startEvent, handleEvent, false);
-			wrapper.removeEventListener(moveEvent, handleEvent, false);
-			wrapper.removeEventListener(endEvent, handleEvent, false);
-			wrapper.removeEventListener(cancelEvent, handleEvent, false);
 			slider.removeEventListener(transitionEndEvent, handleEvent, false);
+
+			wrapper.removeEventListener(startEvent , handleEvent, false);
+			wrapper.removeEventListener(moveEvent  , handleEvent, false);
+			wrapper.removeEventListener(endEvent   , handleEvent, false);
+			wrapper.removeEventListener(cancelEvent, handleEvent, false);
+
 			return self;
 		}
 
-		// If a touch is currently happening, simulates
-		// touchcancel. Prevents further touch events from
-		// being processed.
+		// If a touch is currently happening, simulates touchcancel.
+		// Prevents further touch events from being processed.
 		self.disableTouch = function () {
 			if (lastTouch) {
-				dispatcher.fire('end', lastTouch);
+				eventBus.fire('end', lastTouch);
 				lastTouch = null;
 			}
 			touchDisabled = true;
 		}
 
-		// Simulates a touchstart if a touch is currently
-		// in progress.
+		// Simulates a touchstart if a touch is currently in progress.
+		// Otherwise, enables the processing of future touches.
 		self.enableTouch = function () {
 			if (lastTouch) {
-				dispatcher.fire('start', lastTouch);
+				eventBus.fire('start', lastTouch);
 			}
 			touchDisabled = false;
 		}
 	}
 
+	// http://github.com/crazy2be/EventBus.js
+	function EventBus() {
+		var self = this;
+		var callbacks = {};
+		self.callbacks = callbacks;
+
+		// remove modifies the list which it is passed,
+		// removing all occurances of val.
+		function remove(list, val) {
+			for (var i = 0; i < list.length; i++) {
+				if (list[i] === val) {
+					list.splice(i, 1);
+				}
+			}
+		}
+
+		// Register a callback for the specified event. If the
+		// callback is already registered for the event, it is
+		// not added again.
+		self.on = function (ev, cb) {
+			var list = callbacks[ev] || [];
+			remove(list, cb);
+			list.push(cb);
+			callbacks[ev] = list;
+			return self;
+		}
+
+		// Remove a callback for the specified event. If the callback
+		// has not been registered, it does not do anything. If the
+		// second argument is undefined, it removes all handlers for
+		// the specified event.
+		self.off = function (ev, cb) {
+			if (cb === undefined) {
+				delete callbacks[ev];
+				return self;
+			}
+			var list = callbacks[ev];
+			if (!list) return self;
+			remove(list, cb);
+			return self;
+		}
+
+		// Fire an event, passing each registered handler all of
+		// the specified arguments. Within the handler, this is
+		// set to null.
+		self.fire = function (ev, arg1, arg2/*, ...*/) {
+			var list = callbacks[ev];
+			if (!list) return;
+			var args = Array.prototype.slice.call(arguments, 1);
+			for (var i = 0; i < list.length; i++) {
+				list[i].apply(null, args);
+			}
+			return self;
+		}
+	}
+
+	var supportsTransitions = false;
 	var vendor = (function () {
 		var dummyStyle = document.createElement('div').style;
-		var vendors = 't,webkitT,MozT,msT,OT'.split(',');
+		var vendors = 'webkitT,MozT,msT,OT,t'.split(',');
 
 		for (var i = 0; i < vendors.length; i++) {
-			var t = vendors[i] + 'ransform';
-			if (t in dummyStyle) {
+			var transform  = vendors[i] + 'ransform';
+			var transition = vendors[i] + 'ransition';
+			if (transition in dummyStyle) {
+				supportsTransitions = true;
+			}
+			if (transform in dummyStyle) {
 				return vendors[i].substr(0, vendors[i].length - 1);
 			}
 		}
@@ -551,22 +638,22 @@ var SlideViewer = (function (Zepto, jQuery) {
 		return false;
 	})();
 
-	function prefixStyle (style) {
+	function prefixStyle(style) {
 		if (vendor === '') return style;
 		style = style.charAt(0).toUpperCase() + style.substr(1);
 		return vendor + style;
 	}
 
 	// Mod in javascript is messed up for negative numbers.
-	function mod (a, b) {
+	function mod(a, b) {
 		return ((a % b) + b) % b;
 	}
 
-	function clamp (n, min, max) {
+	function clamp(n, min, max) {
 		return Math.max(min, Math.min(max, n));
 	}
 
-	function isElement (o) {
+	function isElement(o) {
 		if (typeof HTMLElement === "object") {
 			return o instanceof HTMLElement
 		} else {
@@ -575,4 +662,4 @@ var SlideViewer = (function (Zepto, jQuery) {
 	}
 
 	return SlideViewer;
-})(window.Zepto, window.jQuery);
+}(window.Zepto, window.jQuery));

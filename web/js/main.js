@@ -149,7 +149,14 @@ App.populator('Perez1', function (page, article) {
     articleSection.append(descr);
     //Actually append all the article elements
     article.append(articleSection);
-    article.scrollable();
+
+    if (App.platform === 'android'){
+      // For Android > ICS touch events are eaten, this should prevent that
+      article.scrollable(true);  
+    }
+    else{
+      article.scrollable();
+    }
     return article[0];
     }
   }
