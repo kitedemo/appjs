@@ -252,8 +252,7 @@ App.populator('fromKikPerez', function (page, linkData) {
     });
   });
 }, function(page, linkData){ //Destructor for the fromKikPerez Populator
-    var os = cards.utils.platform.os;
-    if (os.name === 'android'){
+    if (App.platform === 'android'){
       //Once you dismiss the fromKikPerez viewer we don't want to return to
       //the previous conversation, so need to unbindBack
       cards.browser.unbindBack(handleBackButton);
