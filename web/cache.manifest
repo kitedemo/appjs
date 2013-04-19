@@ -1,1 +1,29 @@
 CACHE MANIFEST
+
+CACHE:
+img/bigger-loader.gif?inline=1
+img/perez.jpg
+img/x.png
+img/retry_icon@2x.png
+
+http://cdn.kik.com/cards/0/cards.js
+
+# zerver:js/main.min.js
+js/zepto.js
+js/app.js
+zerver/require.js
+zerver/feedParser.js
+js/dispatcher.js
+js/SlideViewer.js
+js/main.js
+# /zerver
+
+
+# zerver:css/main.min.css
+css/app.css  
+css/default.css
+css/christine.css
+# /zerver
+
+NETWORK:
+*
