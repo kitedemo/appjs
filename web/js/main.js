@@ -31,14 +31,13 @@ App.populator('Perez1', function (page, article) {
     reload.addClass('app-button reload');
     $(page).find('.app-topbar').append(reload);
     reload.clickable().on('click', function (){
-      //slideviewer.setPage(0);
-      index=0;
-      App.load('Perez1', articleData[index], 'slide-right', function () { //This is a callback:)
-        //When done loading new Perez1, remove from the backstack
-        try {
-          App.removeFromStack(0);
-        }
-        catch (err) {}
+    index=0;
+    App.load('Perez1', articleData[index], 'slide-right', function () { //This is a callback:)
+      //When done loading new Perez1, remove from the backstack
+      try {
+        App.removeFromStack(0);
+      }
+      catch (err) {}
       });
     });
 
@@ -151,7 +150,8 @@ App.populator('Perez1', function (page, article) {
     article.append(articleSection);
 
     if (App.platform === 'android'){
-      // For Android > ICS touch events are eaten, this should prevent that
+      // For Android > ICS touch events are eaten on some slide viewer pages
+      // this should prevent that
       article.scrollable(true);  
     }
     else{
@@ -168,6 +168,10 @@ App.populator('Perez1', function (page, article) {
     cards.browser.unbindBack(handleBackButton);
   }
 });
+
+
+
+
 
 // fromKikPerez Viewer
 // If opened from a Kik message the article may not be in the top 10
@@ -269,6 +273,7 @@ function handleBackButton () {
     return false
   };
 }
+
 
 // If opened from a Kik Message then open the "PerezViewer"
 if (cards.browser && cards.browser.linkData) {
