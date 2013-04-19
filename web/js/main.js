@@ -172,7 +172,7 @@ App.populator('Perez1', function (page, article) {
     //Actually append all the article elements
     article.append(articleSection);
 
-    if (App.platform === 'android'){
+    if ( App.platform === 'android' && ( App.platformVersion >= 4 && App.platformVersion < 4.1 ) ) {
       // For Android > ICS touch events are eaten on some slide viewer pages
       // this should prevent that
       article.scrollable(true);  
