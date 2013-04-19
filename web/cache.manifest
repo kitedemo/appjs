@@ -5,11 +5,13 @@ img/bigger-loader.gif?inline=1
 img/perez.jpg
 img/x.png
 img/retry_icon@2x.png
+img/pink_video.jpeg
 
 http://cdn.kik.com/cards/0/cards.js
 
 # zerver:js/main.min.js
 js/zepto.js
+js/store.js
 js/app.js
 zerver/require.js
 zerver/feedParser.js

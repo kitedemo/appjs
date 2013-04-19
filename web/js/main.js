@@ -7,11 +7,35 @@ App.populator('Perez1', function (page, article) {
   // But only do so once the card is ready
   cards.ready(function () {
     feedParser.getArticles(function (articles){
+      // Stores a set of articles for offline mode
+      if (articles){
+        Store.set('articles', articles);
+      }
+      else{
+        //If we didn't get the articles then we should retrieve them from the cache
+        articles = Store.get('articles');
+      }
       //console.log(articles);
+      if (articles){
+        articleData = articles;
+        index = articleData[index].index;  
+        addContent();
+      }
+     else {
+      // TO DO: Add network error state here
+     }
+    }).error(function(){
+    //Went to db but couldn't get articles from it, so serve cached articles 
+    var articles = Store.get('articles');
+    if (articles){
       articleData = articles;
       index = articleData[index].index;  
       addContent();
-    });
+    }
+    else{
+      //TO DO: Add network error state here
+    }
+  });
   });
 
   // Adding the dot carousel - Note: this used to be not hardcoded but transitioning 
@@ -22,7 +46,7 @@ App.populator('Perez1', function (page, article) {
      $(page).find('#dots').append(newDot);
   }
 
-  var addContent = function () {
+  function addContent () {
     //Since on('flip') isn't thrown initially for page0
     addDot(0);
     
@@ -57,7 +81,6 @@ App.populator('Perez1', function (page, article) {
      var kikTitle = $('<div />').html(articleData[j].title).text();
      var kikDescription = $('<div />').html(articleData[j].description).text();
      var kikImg = $('<div />').html(articleData[j].content).find('img').attr('src');
-     //var kikImg = 'img/perez.jpg';
      var kikLinkData = JSON.stringify(articleData[j]);
 
       cards.kik.send({
@@ -274,6 +297,8 @@ function handleBackButton () {
   };
 }
 
+//Give a timeout for articles to fetch, if exceeds then get from cache
+ZERVER_TIMEOUT = 15000;
 
 // If opened from a Kik Message then open the "PerezViewer"
 if (cards.browser && cards.browser.linkData) {
