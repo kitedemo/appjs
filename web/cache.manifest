@@ -12,7 +12,6 @@ http://cdn.kik.com/cards/0/cards.js
 # zerver:js/main.min.js
 js/zepto.js
 js/store.js
-js/analytics.js
 js/app.js
 zerver/require.js
 zerver/feedParser.js
