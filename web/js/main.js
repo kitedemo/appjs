@@ -7,7 +7,7 @@ App.populator('Perez1', function (page, article) {
   // Create an array of article objects
   cards.ready(function () {
     feedParser.getArticles(function (articles){
-      //console.log(articles);
+      console.log(articles);
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
         Store.set('articles', articles);
@@ -165,7 +165,7 @@ App.populator('Perez1', function (page, article) {
           $(descr).prepend(imgs);
         }
       });
-    // Once all the new images are added, update the content var
+    // Once all the new images are added, update the content for the article
     articleData[i].content = descr.html();
 
     // For all images in description, make them clickable to the article
