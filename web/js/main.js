@@ -129,61 +129,61 @@ App.populator('Perez1', function (page, article) {
 
       //* Article Description Section including the Image
       var descr = $('<div />').html(articleData[i].content);
+      //Finds all the 'children' without an image (<p>) in the description, adds padding to the text
+      descr.children().not(descr.children().has('img')).css('padding',10);
 
-      //Finds all the 'children' in the description
-      descr.children().each(function(i, descrChild){
-        //Finds all the 'children' without an image (<p>) in the description, adds padding to the text
-        if ($(this).find('img').length ===0){
-          $(this).css('padding',10);
-        }
-        //Adds default image to articles that have videos in <span> tags
-        if ($(this).find('span').length){
-          var imgs = $('<img />');
-          imgs.attr('src', 'img/pink_video.jpeg');
-          imgs.addClass('centeredImage');
-          $(this).find('span').replaceWith(imgs);
-          imgs.parent().css('text-align', 'center');
-        }
-        //Scale the Embedded YouTube video to fit the page
-        if ($(this).find('iframe').length){
-          console.log('testing');
-          $(this).find('iframe').width('100%');
-          $(this).find('iframe').height('56%');
-        }
-        //Find all the links in the description and override default click behaviour
-        //Think of the bug on iPhone when it would fail to load the card after click
-        if ($(this).find('a')){
-          $(this).find('a').on('click', function(e){
-            e.preventDefault();
-            cards.browser.open($(this).attr("href"));
-          }); 
-        }
-        //Adds default image to articles
-        if ($(descr).find('img').length===0){
-          var imgs = new Image();
-          imgs.src = 'img/perez.jpg';
-          $(descr).prepend(imgs);
-        }
+      //Adds default image to articles that have videos in <span> tags
+      if (descr.find('span').length){
+        var imgs = $('<img />');
+        imgs.attr('src', 'img/pink_video.jpeg');
+        imgs.addClass('centeredImage');
+        descr.find('span').replaceWith(imgs);
+        imgs.parent().css('text-align', 'center');
+      }
+
+      //Scale the Embedded YouTube video to fit the page
+      descr.find('iframe').width('100%').height('56%');
+
+      //Find all the poll articles and remove form, loading spinners and vote buttons
+      descr.find('.wp-polls-loading').remove();
+      descr.find('.wp-polls form').remove();
+      descr.find('a[href$="#VotePoll"]').remove();
+
+      //Find all the links in the description and override default click behaviour
+      //Think of the bug on iPhone when it would fail to load the card after click
+      if (descr.find('a')){
+        descr.find('a').on('click', function(e){
+          e.preventDefault();
+          cards.browser.open(descr.attr("href"));
+        }); 
+      }
+
+      //Adds default image to articles
+      if (descr.find('img').length === 0){
+        var imgs = new Image();
+        imgs.src = 'img/perez.jpg';
+        $(descr).prepend(imgs);
+      }
+      
+      // Once all the new images are added, update the content for the article
+      articleData[i].content = descr.html();
+
+      // For all images in description, make them clickable to the article
+      descr.find('img').clickable().on('click', function (){
+            cards.browser.open(articleData[i].link); //Click the image, open article URL
       });
-    // Once all the new images are added, update the content for the article
-    articleData[i].content = descr.html();
+      articleSection.append(descr);
+      //Actually append all the article elements
+      article.append(articleSection);
 
-    // For all images in description, make them clickable to the article
-    descr.find('img').clickable().on('click', function (){
-          cards.browser.open(articleData[i].link); //Click the image, open article URL
-    });
-    articleSection.append(descr);
-    //Actually append all the article elements
-    article.append(articleSection);
-
-    if ( App.platform === 'android' && ( App.platformVersion >= 4 && App.platformVersion < 4.1 ) ) {
-      // For Android > ICS touch events are eaten on some slide viewer pages
-      // this should prevent that
-      article.scrollable(true);  
-    }
-    else{
-      article.scrollable();
-    }
+      if ( App.platform === 'android' && ( App.platformVersion >= 4 && App.platformVersion < 4.1 ) ) {
+        // For Android > ICS touch events are eaten on some slide viewer pages
+        // this should prevent that
+        article.scrollable(true);  
+      }
+      else{
+        article.scrollable();
+      }
     return article[0];
     }
   }
