@@ -39,19 +39,19 @@ App.populator('Perez1', function (page, article) {
     });
   });
 
-  // Add Dot Carousel
-  // Note: this used to be not hardcoded but transitioning to the loading screen 
-  // looked awful so changed to hardcoding outside of addContent
-  for (var d=0;d<10;d++){
-    var newDot= $('<div />');
-    newDot.addClass('dot');
-    $(page).find('#dots').append(newDot);
-  }
+  // // Add Dot Carousel
+  // // Note: this used to be not hardcoded but transitioning to the loading screen 
+  // // looked awful so changed to hardcoding outside of addContent
+  // for (var d=0;d<10;d++){
+  //   var newDot= $('<div />');
+  //   newDot.addClass('dot');
+  //   $(page).find('#dots').append(newDot);
+  // }
 
   // Add Article Content - Title, Pic, Description
   function addContent () {
     //Since on('flip') isn't thrown initially for page0
-    addDot(0);
+    // addDot(0);
     
     // Add "Reload" button
     var reload = $('<div />');
@@ -74,18 +74,18 @@ App.populator('Perez1', function (page, article) {
     
     //Create Slideview
     var slideviewer = new SlideViewer(wrapper, source, {
-      startAt: parseInt(articleData[index].index, 10),
+      startAt: parseInt(articleData[index].index, 30),
     });
     page.addEventListener('appLayout', function () {
       slideviewer.refreshSize();
     })
 
-    //Add Active Dot for the page your on
-    function addDot(i){
-      $(page).find('#dots .dot.active').removeClass('active'); //Removes all active dots
-      var current = $(page).find('#dots .dot').eq(i);
-      current.addClass('active'); //Sets the active dot to the current page
-    }
+    // //Add Active Dot for the page your on
+    // function addDot(i){
+    //   $(page).find('#dots .dot.active').removeClass('active'); //Removes all active dots
+    //   var current = $(page).find('#dots .dot').eq(i);
+    //   current.addClass('active'); //Sets the active dot to the current page
+    // }
 
     //* Adding the article for sending via Kik
     $(page).find('#kik').on('click', function (){
@@ -104,10 +104,10 @@ App.populator('Perez1', function (page, article) {
       });
     });
 
-    // Call these functions everytime your flip
-    slideviewer.on('flip', function(i){
-      addDot(i);
-    });
+    // // Call these functions everytime your flip
+    // slideviewer.on('flip', function(i){
+    //   addDot(i);
+    // });
 
     // Creates the content page
     function source(i) {

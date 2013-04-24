@@ -41,6 +41,8 @@ function init () {
   }
 
   fp.parseUrl('http://i.perezhilton.com/?feed=atom').on('article', add);
+  fp.parseUrl('http://perezhilton.com/cocoperez/?feed=atom').on('article', add);
+  fp.parseUrl('http://perezhilton.com/perezitos/?feed=atom').on('article', add);
 
   return promise;
 }
