@@ -135,10 +135,10 @@
 
 /******** MISC ***********/
 
-/* Remove padding from top area such that dots look better*/
+/* Remove padding from top area such that dots look better
 .app-page .app-section{
 	margin: 0 8px 8px 8px;
-}
+}/*
 
 /*BOTH - Loading gif when waiting for the content area to load*/
 .loader{

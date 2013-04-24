@@ -7,7 +7,7 @@ App.populator('Perez1', function (page, article) {
   // Create an array of article objects
   cards.ready(function () {
     feedParser.getArticles(function (articles){
-      console.log(articles);
+      //console.log(articles);
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
         Store.set('articles', articles);
@@ -151,12 +151,10 @@ App.populator('Perez1', function (page, article) {
 
       //Find all the links in the description and override default click behaviour
       //Think of the bug on iPhone when it would fail to load the card after click
-      if (descr.find('a')){
-        descr.find('a').on('click', function(e){
-          e.preventDefault();
-          cards.browser.open(descr.attr("href"));
-        }); 
-      }
+      descr.find('a').on('click', function(e){
+        e.preventDefault();
+        cards.browser.open($(this).attr("href"));
+      }); 
 
       //Adds default image to articles
       if (descr.find('img').length === 0){
