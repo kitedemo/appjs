@@ -1,0 +1,10 @@
+Bookshelf.Initialize({
+  client: 'pg',
+  connection: {
+    host     : 'localhost',
+    user     : 'your_database_user',
+    password : 'your_database_password',
+    database : 'your_db',
+    charset  : 'utf8'
+  }
+});
