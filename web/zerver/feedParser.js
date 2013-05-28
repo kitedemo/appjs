@@ -29,14 +29,14 @@ function init () {
 
     index++;
 
-    if( articles.length === 10 ){
+    if(articles.length === 10 ){
       promise.resolve(articles);
     }
   }
 
   fp.parseUrl('http://i.perezhilton.com/?feed=atom').on('article', add);
-  fp.parseUrl('http://perezhilton.com/cocoperez/?feed=atom').on('article', add);
-  fp.parseUrl('http://perezhilton.com/perezitos/?feed=atom').on('article', add);
+  fp.parseUrl('http://i.perezhilton.com/page/2/?feed=atom').on('article', add);
+  fp.parseUrl('http://i.perezhilton.com/page/3/?feed=atom').on('article', add);
 
   return promise;
 }

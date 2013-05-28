@@ -61,8 +61,9 @@ App.populator('Perez1', function (page, article) {
     wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
     
     //Create Slideview
+    var length = articleData.length; 
     var slideviewer = new SlideViewer(wrapper, source, {
-      startAt: parseInt(articleData[index].index, 30),
+      startAt: parseInt(articleData[index].index, length),
     });
     page.addEventListener('appLayout', function () {
       slideviewer.refreshSize();
