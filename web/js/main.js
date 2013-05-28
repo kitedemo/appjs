@@ -39,20 +39,8 @@ App.populator('Perez1', function (page, article) {
     });
   });
 
-  // // Add Dot Carousel
-  // // Note: this used to be not hardcoded but transitioning to the loading screen 
-  // // looked awful so changed to hardcoding outside of addContent
-  // for (var d=0;d<10;d++){
-  //   var newDot= $('<div />');
-  //   newDot.addClass('dot');
-  //   $(page).find('#dots').append(newDot);
-  // }
-
   // Add Article Content - Title, Pic, Description
   function addContent () {
-    //Since on('flip') isn't thrown initially for page0
-    // addDot(0);
-    
     // Add "Reload" button
     var reload = $('<div />');
     reload.addClass('app-button reload');
@@ -80,13 +68,6 @@ App.populator('Perez1', function (page, article) {
       slideviewer.refreshSize();
     })
 
-    // //Add Active Dot for the page your on
-    // function addDot(i){
-    //   $(page).find('#dots .dot.active').removeClass('active'); //Removes all active dots
-    //   var current = $(page).find('#dots .dot').eq(i);
-    //   current.addClass('active'); //Sets the active dot to the current page
-    // }
-
     //* Adding the article for sending via Kik
     $(page).find('#kik').on('click', function (){
      var j = slideviewer.page(); //index to current page not i
@@ -103,11 +84,6 @@ App.populator('Perez1', function (page, article) {
         linkData : kikLinkData
       });
     });
-
-    // // Call these functions everytime your flip
-    // slideviewer.on('flip', function(i){
-    //   addDot(i);
-    // });
 
     // Creates the content page
     function source(i) {
@@ -175,11 +151,9 @@ App.populator('Perez1', function (page, article) {
       article.append(articleSection);
 
       if ( (App.platform === 'android' && App.platformVersion >= 4) || (App.platform ==='ios' && (App.platformVersion>=5 && App.platformVersion <6))) {
-      //if (App.platform ==='ios' && (App.platformVersion>=5 && App.platformVersion <6)){
         // For Android > ICS touch events are eaten on some slide viewer pages
-        // this should prevent that
+        // Also iOS5 has issues with List Scrolling, have to use iScroll
         article.scrollable(true); 
-        console.log('iPhone');
       }
       else{
         article.scrollable();

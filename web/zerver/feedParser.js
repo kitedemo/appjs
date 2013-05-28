@@ -20,17 +20,11 @@ function init () {
     obj.link    = article['link'];
     obj.description = article['summary'];
 
+    //This should remove certain tags from the HTML (ie. perez.videoplayer)
     obj.content = obj.content.replace(/\<p[^>]*\>\<object[^>]*\>[^<]*\<\/object\>\<\/p\>/g, '');
     obj.content = obj.content.replace(/\<script[^>]*\>[^<]*\<\/script\>/g, '');
     obj.content = obj.content.replace(/\<iframe[^>]*\>[^<]*\<\/iframe\>/g, '');
 
-    // This is to remove <script> tags from the HTML (ie. perez.videoplayer)
-    // See http://stackoverflow.com/questions/6659351/removing-all-script-tags-from-html-with-js-regular-expression
-    // obj.content = obj.content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-
-    // This shoudl remove <iframe> tags from the HTML
-    // obj.content = obj.content.replace(/\<iframe[^>]*\>[^\<]\<\/iframe\>/, '');
-    
     articles.push(obj);
 
     index++;
@@ -48,9 +42,9 @@ function init () {
 }
 
 function updateArticles () {
-  console.log('updating articles..');
+  console.log('Updating Articles...');
   init().then(function(articles) {
-    console.log('articles updated');
+    console.log('Articles Updated!');
     currentArticles = articles;
     redis.set('articles', JSON.stringify(articles));
   });
