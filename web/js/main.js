@@ -7,7 +7,7 @@ App.populator('Perez1', function (page, article) {
   // Create an array of article objects
   cards.ready(function () {
     feedParser.getArticles(function (articles){
-      //console.log(articles);
+      console.log(articles);
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
         Store.set('articles', articles);
@@ -174,10 +174,12 @@ App.populator('Perez1', function (page, article) {
       //Actually append all the article elements
       article.append(articleSection);
 
-      if ( App.platform === 'android' && App.platformVersion >= 4 ) {
+      if ( (App.platform === 'android' && App.platformVersion >= 4) || (App.platform ==='ios' && (App.platformVersion>=5 && App.platformVersion <6))) {
+      //if (App.platform ==='ios' && (App.platformVersion>=5 && App.platformVersion <6)){
         // For Android > ICS touch events are eaten on some slide viewer pages
         // this should prevent that
-        article.scrollable(true);  
+        article.scrollable(true); 
+        console.log('iPhone');
       }
       else{
         article.scrollable();
