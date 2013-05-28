@@ -62,7 +62,8 @@ function startArticleUpdating () {
         currentArticles = articles;
       }
     }
-    setInterval(updateArticles, 30 * 60 * 1000);
+    // Fetch new articles every 30 mins
+    setInterval(updateArticles, 15 * 60 * 1000);
     updateArticles();
   });
 }
