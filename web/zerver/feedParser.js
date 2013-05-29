@@ -4,6 +4,7 @@ var redis = require('redis-url')
         .on('error', function () {});
 
 var currentArticles;
+var test;
 
 function init () {
   var fp       = require('feedparser'),
@@ -37,8 +38,6 @@ function init () {
   }
 
   fp.parseUrl('http://i.perezhilton.com/?feed=atom').on('article', add);
-  //fp.parseUrl('http://i.perezhilton.com/page/2/?feed=atom').on('article', add);
-  //fp.parseUrl('http://i.perezhilton.com/page/3/?feed=atom').on('article', add);
 
   return promise;
 }
@@ -46,24 +45,21 @@ function init () {
 function updateArticles () {
   console.log('Updating Articles...');
   init().then(function(articles) {
+    test = articles;
     console.log('Articles Updated');
 
-    //Check dupes
     //Creates an array for all article links stored in currentArticles
     var articleLinks = [];
       currentArticles.forEach(function (article) {
       articleLinks.push(article.link);
     });
 
-    //Checks for duplicates
+    //Checks for duplicates and removes them
     var currentLink;
     articles.forEach(function (article) {
       currentLink = article.link;
 
       for(var i=1; i<articleLinks.length; i++){
-        //console.log(currentLink);
-        //console.log(articleLinks[i]);
-
         if (currentLink === articleLinks[i]){
           //remove this entry from currentArticles
           currentArticles.splice(i, 1);
@@ -75,7 +71,7 @@ function updateArticles () {
     //Combines the articles and currentArticles array
     currentArticles = articles.concat(currentArticles);
 
-    console.log(currentArticles.length);
+    //console.log(currentArticles.length);
 
     redis.set('articles', JSON.stringify(currentArticles));
   });
@@ -96,16 +92,12 @@ function startArticleUpdating () {
     // Fetch new articles every 15 mins
     //setInterval(updateArticles, 1 * 10 * 1000);
 
-    setInterval(updateArticles, 15 * 60 * 1000);
+    setInterval(updateArticles, 1 * 10 * 1000);
     updateArticles();
   });
 }
 
 startArticleUpdating();
-
-// exports.getArticles = function(callback) {
-//   callback(currentArticles);
-// };
 
 exports.getArticles = function (timestamp, callback) {
   if (typeof timestamp === 'function') {
@@ -115,8 +107,7 @@ exports.getArticles = function (timestamp, callback) {
 
   //If no currentArticles should get all new articles
   if ( !currentArticles ) {
-    callback();
-    console.log('!currentArticles');
+    currentArticles = test;
     return;
   }
 
@@ -135,5 +126,6 @@ exports.getArticles = function (timestamp, callback) {
       console.log('!Push articles with > timestamp');
     }
   });
+
   callback(newArticles);
 };

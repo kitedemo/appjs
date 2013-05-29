@@ -12,8 +12,7 @@ App.populator('Perez1', function (page, article) {
   // Create an array of article objects
   cards.ready(function () {
     feedParser.getArticles(function (articles){
-      console.log(articles);
-      console.log(articles.length);
+      //console.log(articles.length);
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
         Store.set('articles', articles);
@@ -70,10 +69,11 @@ App.populator('Perez1', function (page, article) {
     wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
       
     //Create Slideview
-    var length = articleData.length;
-    console.log(articleData.length); 
+    var size = articleData.length;
+    //console.log(articleData.length); 
+    console.log(articleData);
     var slideviewer = new SlideViewer(wrapper, source, {
-      startAt: parseInt(articleData[index].index, length),
+      startAt: parseInt(articleData[index].index, size), length:size
     });
     page.addEventListener('appLayout', function () {
       slideviewer.refreshSize();

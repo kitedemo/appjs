@@ -8,7 +8,7 @@ SlideViewer = (function (Zepto, jQuery) {
 		allowScroll: true,
 		// If your source function is bounded by some
 		// known limit, you can set it here.
-		length: 500,
+		length: 10,
 		// If you want to start somewhere other than
 		// on the first slide, setting this (rather
 		// than calling .setPage()) will prevent your
