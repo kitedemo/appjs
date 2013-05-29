@@ -1,5 +1,6 @@
 var redis = require('redis-url')
-        .connect(process.env.REDISTOGO_URL)
+        //.connect(process.env.REDISTOGO_URL)
+        .connect('redis://localhost:6379')
         .on('error', function () {});
 
 var currentArticles;
@@ -15,6 +16,7 @@ function init () {
     // Make an Article object, add it to an array
     var obj     = {};
     obj.index   = index;
+    obj.timestamp = +new Date(); //Adding a timestamp to each article
     obj.title   = article['title'];
     obj.content = article['description'];
     obj.link    = article['link'];
@@ -25,8 +27,8 @@ function init () {
     obj.content = obj.content.replace(/\<script[^>]*\>[^<]*\<\/script\>/g, '');
     obj.content = obj.content.replace(/\<iframe[^>]*\>[^<]*\<\/iframe\>/g, '');
 
+    //Add a new article to the stack and increment topArticle pointer and index
     articles.push(obj);
-
     index++;
 
     if(articles.length === 10 ){
@@ -35,8 +37,8 @@ function init () {
   }
 
   fp.parseUrl('http://i.perezhilton.com/?feed=atom').on('article', add);
-  fp.parseUrl('http://i.perezhilton.com/page/2/?feed=atom').on('article', add);
-  fp.parseUrl('http://i.perezhilton.com/page/3/?feed=atom').on('article', add);
+  //fp.parseUrl('http://i.perezhilton.com/page/2/?feed=atom').on('article', add);
+  //fp.parseUrl('http://i.perezhilton.com/page/3/?feed=atom').on('article', add);
 
   return promise;
 }
@@ -44,9 +46,38 @@ function init () {
 function updateArticles () {
   console.log('Updating Articles...');
   init().then(function(articles) {
-    console.log('Articles Updated!');
-    currentArticles = articles;
-    redis.set('articles', JSON.stringify(articles));
+    console.log('Articles Updated');
+
+    //Check dupes
+    //Creates an array for all article links stored in currentArticles
+    var articleLinks = [];
+      currentArticles.forEach(function (article) {
+      articleLinks.push(article.link);
+    });
+
+    //Checks for duplicates
+    var currentLink;
+    articles.forEach(function (article) {
+      currentLink = article.link;
+
+      for(var i=1; i<articleLinks.length; i++){
+        //console.log(currentLink);
+        //console.log(articleLinks[i]);
+
+        if (currentLink === articleLinks[i]){
+          //remove this entry from currentArticles
+          currentArticles.splice(i, 1);
+          break;
+        }
+      }
+    });
+
+    //Combines the articles and currentArticles array
+    currentArticles = articles.concat(currentArticles);
+
+    console.log(currentArticles.length);
+
+    redis.set('articles', JSON.stringify(currentArticles));
   });
 }
 
@@ -62,15 +93,47 @@ function startArticleUpdating () {
         currentArticles = articles;
       }
     }
-    // Fetch new articles every 30 mins
+    // Fetch new articles every 15 mins
+    //setInterval(updateArticles, 1 * 10 * 1000);
+
     setInterval(updateArticles, 15 * 60 * 1000);
     updateArticles();
   });
 }
 
-
 startArticleUpdating();
 
-exports.getArticles = function(callback) {
-  callback(currentArticles);
+// exports.getArticles = function(callback) {
+//   callback(currentArticles);
+// };
+
+exports.getArticles = function (timestamp, callback) {
+  if (typeof timestamp === 'function') {
+    callback  = timestamp;
+    timestamp = null;
+  }
+
+  //If no currentArticles should get all new articles
+  if ( !currentArticles ) {
+    callback();
+    console.log('!currentArticles');
+    return;
+  }
+
+  //If articles without a timestamp, currentArticles will contain all new articles
+  if ( !timestamp ) {
+    callback(currentArticles);
+    console.log('!timestamp, same currentArticles');
+    return;
+  }
+
+  //If articles with timestamps older than the current one, 
+  var newArticles = [];
+  currentArticles.forEach(function (article) {
+    if (article.timestamp > timestamp) {
+      newArticles.push(article);
+      console.log('!Push articles with > timestamp');
+    }
+  });
+  callback(newArticles);
 };
