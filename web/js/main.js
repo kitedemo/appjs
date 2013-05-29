@@ -17,17 +17,9 @@ App.populator('Perez1', function (page, article) {
 
         // Try and sort the articles based on timestamp
          articles = articles.sort(function (a, b) {
-         if ( a.timestamp > b.timestamp )
-           return -1
-         if ( a.timestamp < b.timestamp )
-           return 1
-          return 0;
+          return (b.issued-a.issued);
          });
-
-        //Console logging the article title to check for dupes
-        articles.forEach(function(article){
-          console.log(article.timestamp + ' ' +article.title);
-        })
+         console.log(articles);
 
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
