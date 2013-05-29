@@ -18,7 +18,7 @@ function init () {
     // Make an Article object, add it to an array
     var obj     = {};
     obj.index   = index;
-    obj.timestamp = +new Date() + index; //Adding a timestamp to each article
+    obj.timestamp = +new Date() - index; //Adding a unique timestamp to each article
     obj.title   = article['title'];
     obj.content = article['description'];
     obj.link    = article['link'];
@@ -39,9 +39,8 @@ function init () {
     }
   }
 
+  //Initializing the app with 30 articles
   fp.parseUrl('http://i.perezhilton.com/?feed=atom').on('article', add);
-  fp.parseUrl('http://i.perezhilton.com/page/2/?feed=atom').on('article', add);
-  fp.parseUrl('http://i.perezhilton.com/page/3/?feed=atom').on('article', add);
 
   return promise;
 }
@@ -51,35 +50,27 @@ function updateArticles () {
   init().then(function(articles) {
     test = articles;
     console.log('Articles Updated');
-    console.log(articles.length);
-
-    // //Creates an array for all article links stored in currentArticles
-    // var articleLinks = [];
-    // currentArticles.forEach(function (article) {
-    //   articleLinks.push(article.link);
-    //   console.log('The size of the article Link array' + articleLinks.length);
-    // });
 
     //Checks for duplicates in the articles against the currentArticles array
     //Removes dupe articles from currentArticles array
     articles.forEach(function (article) {
       for(var i = currentArticles.length - 1; i >= 0; i--){
-        //console.log(currentArticles[i].link);
-        //console.log(article.link);
-
         if (article.link === currentArticles[i].link){
-          //remove this entry from currentArticles
+          console.log('New timestamp' + article.timestamp);
+          console.log('Old timestamp' + currentArticles[i].timestamp);
+          article.timestamp = currentArticles[i].timestamp;
+          console.log(article.title + 'I should be old timestamp ' + article.timestamp);
           currentArticles.splice(i, 1);
-          break;
+          //break;
         }
       }
     });
 
     //Combines the articles and currentArticles array
-    console.log(articles.length);
-    console.log(currentArticles.length);
+    // console.log(articles.length);
+    // console.log(currentArticles.length);
     currentArticles = articles.concat(currentArticles);
-    console.log(currentArticles.length);
+    //console.log(currentArticles.length);
 
     redis.set('articles', JSON.stringify(currentArticles));
   });
@@ -100,7 +91,7 @@ function startArticleUpdating () {
     // Fetch new articles every 15 mins
     //setInterval(updateArticles, 1 * 10 * 1000);
 
-    setInterval(updateArticles, 1 * 10 * 1000);
+    setInterval(updateArticles, 1 * 60 * 1000);
     updateArticles();
   });
 }
