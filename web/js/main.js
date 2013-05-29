@@ -11,8 +11,12 @@ App.populator('Perez1', function (page, article) {
   // Once the card is ready - not blocking DOM Load, pull content from PerezHilton.com 
   // Create an array of article objects
   cards.ready(function () {
-    feedParser.getArticles(function (articles){
-      //console.log(articles.length);
+      feedParser.getArticles(function (articles){
+        var newArticles = articles.sort();
+        articles.forEach(function(article){
+          console.log('hello world'+ article.timestamp);
+        })
+        //console.log(articles.length);
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
         Store.set('articles', articles);
@@ -70,10 +74,10 @@ App.populator('Perez1', function (page, article) {
       
     //Create Slideview
     var size = articleData.length;
-    //console.log(articleData.length); 
-    console.log(articleData);
+    // console.log(articleData);
     var slideviewer = new SlideViewer(wrapper, source, {
-      startAt: parseInt(articleData[index].index, size), length:size
+      startAt: 0,
+      length: size
     });
     page.addEventListener('appLayout', function () {
       slideviewer.refreshSize();
