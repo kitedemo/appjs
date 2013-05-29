@@ -12,11 +12,21 @@ App.populator('Perez1', function (page, article) {
   // Create an array of article objects
   cards.ready(function () {
       feedParser.getArticles(function (articles){
-        var newArticles = articles.sort();
+
+         //Try and sort the articles based on timestamp
+         articles = articles.sort(function (a, b) {
+         if ( a.timestamp > b.timestamp )
+           return -1
+         if ( a.timestamp < b.timestamp )
+           return 1
+         return 0;
+       });
+
+         //Console logging the article title to check for dupes
         articles.forEach(function(article){
-          console.log('hello world'+ article.timestamp);
+          console.log(article.title);
         })
-        //console.log(articles.length);
+
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
         Store.set('articles', articles);
@@ -263,6 +273,7 @@ function handleBackButton () {
     return false
   };
 }
+
 
 //Give a timeout for articles to fetch, if exceeds then get from cache
 ZERVER_TIMEOUT = 15000;
