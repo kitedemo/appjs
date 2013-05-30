@@ -8,17 +8,20 @@ var length;
 //
 // ----------------
 App.populator('Perez1', function (page, article) {
+
   // Once the card is ready - not blocking DOM Load, pull content from PerezHilton.com 
   // Create an array of article objects
   cards.ready(function () {
-      feedParser.getArticles(function (articles){
-        console.log(articles);
-        console.log(articles.length);
 
-        // Try and sort the articles based on timestamp
+      feedParser.getArticles(function (articles){
+        //console.log(articles);
+        //console.log(articles.length);
+
+        // Try and sort the articles based on issued time
          articles = articles.sort(function (a, b) {
           return (b.issued-a.issued);
          });
+         console.log(articles.length);
          console.log(articles);
 
       // If articles exist/we can fetch them, stores a set of articles for offline mode

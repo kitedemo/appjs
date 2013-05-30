@@ -3,7 +3,7 @@ var redis = require('redis-url')
         .connect('redis://localhost:6379')
         .on('error', function () {});
 
-var masterArticles;
+var masterArticles = [];
 var defaultArticles;
 
 function init () {
@@ -24,8 +24,8 @@ function init () {
     obj.title   = article['title'];
     obj.content = article['description'];
     obj.link    = article['link'];
+    obj.id      = article['guid'];
     obj.description = article['summary'];
-
 
     //This should remove certain tags from the HTML (ie. perez.videoplayer)
     obj.content = obj.content.replace(/\<p[^>]*\>\<object[^>]*\>[^<]*\<\/object\>\<\/p\>/g, '');
@@ -37,44 +37,55 @@ function init () {
 
     index++;
 
-    if(fromAtomArticles.length === 10 ){
+    if(fromAtomArticles.length === 40 ){
       promise.resolve(fromAtomArticles);
     }
   }
 
   //Initializing the app with 30 articles
+  fp.parseUrl('http://i.perezhilton.com/page/5/?feed=atom').on('article', add);
+  fp.parseUrl('http://i.perezhilton.com/page/4/?feed=atom').on('article', add);
+  fp.parseUrl('http://i.perezhilton.com/page/3/?feed=atom').on('article', add);
+  fp.parseUrl('http://i.perezhilton.com/page/2/?feed=atom').on('article', add);
   fp.parseUrl('http://i.perezhilton.com/?feed=atom').on('article', add);
-
   return promise;
 }
 
 function updateArticles () {
-  console.log('Updating Articles...');
+  console.log('Updating Articles... vick');
   init().then(function(fromAtomArticles) {
+    console.log(fromAtomArticles.length);
     defaultArticles = fromAtomArticles;
     console.log('Articles Updated');
+    //console.log(fromAtomArticles.length);
 
     //Checks for duplicates in the articles against the masterArticles array
     //Removes dupe articles from masterArticles array
     for (var k = fromAtomArticles.length - 1; k >= 0; k--) {
       
       var article = fromAtomArticles[k];
+
+      var repeatArticle = false;
       for(var i = masterArticles.length - 1; i >= 0; i--){
-        if (article.link === masterArticles[i].link){
-          //console.log('from atom timestamp ' + article.issued);
-          //console.log('master timestamp ' + masterArticles[i].issued);
-          var test = fromAtomArticles.splice(k, 1);
-          //console.log(test[0].issued);
+        if (article.link == masterArticles[i].link){
+          //var test = fromAtomArticles.splice(k, 1);
+          console.log("repeat " + article.link);
+          repeatArticle = true;
           break;
         }
+        else
+        {
+          //console.log(article.link + " is not the same as " + masterArticles[i].link);
+        }
+      }
+      if (!repeatArticle)
+      {
+        masterArticles.push(article);
       }
     }
 
     //Combines the articles and masterArticles array
-    console.log(fromAtomArticles.length);
-    console.log(masterArticles.length);
-    masterArticles = fromAtomArticles.concat(masterArticles);
-    //console.log(masterArticles.length);
+    //masterArticles = fromAtomArticles.concat(masterArticles);
 
     redis.set('articles', JSON.stringify(masterArticles));
   });
@@ -82,19 +93,22 @@ function updateArticles () {
 
 function startArticleUpdating () {  
   redis.get('articles', function (err, jsonArticles) {
+    /*
     if (!err && jsonArticles) {
+      console.log("ping");
       var fromAtomArticles;
       try {
         fromAtomArticles = JSON.parse(jsonArticles);
       }
       catch (err) {}
       if (typeof fromAtomArticles === 'object') {
+        console.log("masterArticles set");
         masterArticles = fromAtomArticles;
       }
     }
+    */
     // Fetch new articles every 15 mins
-    //setInterval(updateArticles, 1 * 10 * 1000);
-
+    //setInterval(updateArticles, 15 * 10 * 1000);
     setInterval(updateArticles, 1 * 60 * 1000);
     updateArticles();
   });
@@ -102,31 +116,32 @@ function startArticleUpdating () {
 
 startArticleUpdating();
 
-exports.getArticles = function (timestamp, callback) {
-  if (typeof timestamp === 'function') {
-    callback  = timestamp;
-    timestamp = null;
+exports.getArticles = function (issued, callback) {
+  if (typeof issued === 'function') {
+    callback  = issued;
+    issued = null;
   }
 
   //If no masterArticles should get all new articles
-  if ( !masterArticles ) {
-    masterArticles = defaultArticles;
+  if ( masterArticles.length == 0 ) {
+    console.log('UNEXPECTED BEHAVIOR');
     return;
   }
 
-  //If articles without a timestamp, masterArticles will contain all new articles
-  if ( !timestamp ) {
+  //If articles have an issue date that is not null, masterArticles are unchanged
+  if ( !issued) {
     callback(masterArticles);
-    console.log('!timestamp, same masterArticles');
+    console.log('masterArticles is unchanged');
     return;
   }
 
   //If articles with timestamps older than the master one, 
   var newArticles = [];
   masterArticles.forEach(function (article) {
-    if (article.timestamp > timestamp) {
+    if (article.issued > issued) {
+      console.log(article.title);
       newArticles.push(article);
-      console.log('!Push articles with > timestamp');
+      console.log('Pushing new articles');
     }
   });
 
