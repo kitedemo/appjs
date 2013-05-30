@@ -1,6 +1,6 @@
 var redis = require('redis-url')
-        //.connect(process.env.REDISTOGO_URL)
-        .connect('redis://localhost:6379')
+        .connect(process.env.REDISTOGO_URL)
+        //.connect('redis://localhost:6379')
         .on('error', function () {});
 
 var masterArticles = [];
@@ -59,10 +59,8 @@ function init () {
 function updateArticles () {
   console.log('Updating Articles...');
   init().then(function(fromAtomArticles) {
-    console.log(fromAtomArticles.length);
     defaultArticles = fromAtomArticles;
     console.log('Articles Updated');
-    //console.log(fromAtomArticles.length);
 
     //Checks for duplicates in the articles against the masterArticles array
     //Removes dupe articles from masterArticles array
@@ -73,7 +71,6 @@ function updateArticles () {
       var repeatArticle = false;
       for(var i = masterArticles.length - 1; i >= 0; i--){
         if (article.link == masterArticles[i].link){
-          //var test = fromAtomArticles.splice(k, 1);
           console.log("Repeat article" + article.link);
           repeatArticle = true;
           break;
@@ -85,12 +82,10 @@ function updateArticles () {
       }
       if (!repeatArticle)
       {
+        //Pushes new articles in to masterArticles
         masterArticles.push(article);
       }
     }
-
-    //Combines the articles and masterArticles array
-    //masterArticles = fromAtomArticles.concat(masterArticles);
 
     redis.set('articles', JSON.stringify(masterArticles));
   });
@@ -98,7 +93,7 @@ function updateArticles () {
 
 function startArticleUpdating () {  
   redis.get('articles', function (err, jsonArticles) {
-    /*
+    
     if (!err && jsonArticles) {
       console.log("ping");
       var fromAtomArticles;
@@ -111,9 +106,8 @@ function startArticleUpdating () {
         masterArticles = fromAtomArticles;
       }
     }
-    */
+    
     // Fetch new articles every 15 mins
-    //setInterval(updateArticles, 15 * 10 * 1000);
     setInterval(updateArticles, 15 * 60 * 1000);
     updateArticles();
   });
