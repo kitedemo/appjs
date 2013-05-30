@@ -94,18 +94,18 @@ function updateArticles () {
 function startArticleUpdating () {  
   redis.get('articles', function (err, jsonArticles) {
     
-    if (!err && jsonArticles) {
-      console.log("ping");
-      var fromAtomArticles;
-      try {
-        fromAtomArticles = JSON.parse(jsonArticles);
-      }
-      catch (err) {}
-      if (typeof fromAtomArticles === 'object') {
-        console.log("masterArticles set");
-        masterArticles = fromAtomArticles;
-      }
-    }
+    // if (!err && jsonArticles) {
+    //   console.log("ping");
+    //   var fromAtomArticles;
+    //   try {
+    //     fromAtomArticles = JSON.parse(jsonArticles);
+    //   }
+    //   catch (err) {}
+    //   if (typeof fromAtomArticles === 'object') {
+    //     console.log("masterArticles set");
+    //     masterArticles = fromAtomArticles;
+    //   }
+    // }
     
     // Fetch new articles every 15 mins
     setInterval(updateArticles, 15 * 60 * 1000);
