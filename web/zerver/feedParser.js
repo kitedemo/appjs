@@ -37,16 +37,21 @@ function init () {
 
     index++;
 
-    if(fromAtomArticles.length === 40 ){
+    if(fromAtomArticles.length === 100 ){
       promise.resolve(fromAtomArticles);
     }
   }
 
   //Initializing the app with 30 articles
+  fp.parseUrl('http://perezhilton.com/cocoperez/page/5/?feed=atom').on('article', add);
   fp.parseUrl('http://i.perezhilton.com/page/5/?feed=atom').on('article', add);
+  fp.parseUrl('http://perezhilton.com/cocoperez/page/4/?feed=atom').on('article', add);
   fp.parseUrl('http://i.perezhilton.com/page/4/?feed=atom').on('article', add);
+  fp.parseUrl('http://perezhilton.com/cocoperez/page/3/?feed=atom').on('article', add);
   fp.parseUrl('http://i.perezhilton.com/page/3/?feed=atom').on('article', add);
+  fp.parseUrl('http://perezhilton.com/cocoperez/page/2/?feed=atom').on('article', add);
   fp.parseUrl('http://i.perezhilton.com/page/2/?feed=atom').on('article', add);
+  fp.parseUrl('http://perezhilton.com/cocoperez/?feed=atom').on('article', add);
   fp.parseUrl('http://i.perezhilton.com/?feed=atom').on('article', add);
   return promise;
 }
