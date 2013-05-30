@@ -1,6 +1,6 @@
 var redis = require('redis-url')
-        //.connect(process.env.REDISTOGO_URL)
-        .connect('redis://localhost:6379')
+        .connect(process.env.REDISTOGO_URL)
+        //.connect('redis://localhost:6379')
         .on('error', function () {});
 
 var masterArticles = [];
