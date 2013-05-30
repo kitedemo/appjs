@@ -169,7 +169,7 @@ App.populator('Perez1', function (page, article) {
     //Adds default image to articles
     if (descr.find('img').length === 0){
       var imgs = new Image();
-      imgs.src = 'img/image_not_available_noun.jpg';
+      imgs.src = 'img/image_not_available_noun.png';
       $(descr).prepend(imgs);
     }
     
