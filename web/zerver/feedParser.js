@@ -57,7 +57,7 @@ function init () {
 }
 
 function updateArticles () {
-  console.log('Updating Articles... vick');
+  console.log('Updating Articles...');
   init().then(function(fromAtomArticles) {
     console.log(fromAtomArticles.length);
     defaultArticles = fromAtomArticles;
@@ -74,7 +74,7 @@ function updateArticles () {
       for(var i = masterArticles.length - 1; i >= 0; i--){
         if (article.link == masterArticles[i].link){
           //var test = fromAtomArticles.splice(k, 1);
-          console.log("repeat " + article.link);
+          console.log("Repeat article" + article.link);
           repeatArticle = true;
           break;
         }
