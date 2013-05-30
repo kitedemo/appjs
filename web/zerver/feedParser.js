@@ -114,7 +114,7 @@ function startArticleUpdating () {
     */
     // Fetch new articles every 15 mins
     //setInterval(updateArticles, 15 * 10 * 1000);
-    setInterval(updateArticles, 1 * 60 * 1000);
+    setInterval(updateArticles, 15 * 60 * 1000);
     updateArticles();
   });
 }

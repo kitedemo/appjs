@@ -39,8 +39,7 @@
 	}
 
 	// wait until all other assets are loaded to not block pageLoaded
-	cards.utils.windowReady(function () {
-		setTimeout(function () {
+	cards.ready(function () {
 			var ga = d.createElement('script');
 			ga.async = true;
 			ga.defer = true;
@@ -48,6 +47,5 @@
 			ga.src = '//www.google-analytics.com/ga.js';
 			var s = d.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(ga, s);
-		}, 5);
 	}, false);
 })(window, document);
