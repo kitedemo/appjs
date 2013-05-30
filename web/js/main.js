@@ -66,6 +66,9 @@ App.populator('Perez1', function (page, article) {
     reload.addClass('app-button reload');
     $(page).find('.app-topbar').append(reload);
     reload.clickable().on('click', function (){
+      //Track the reload event
+      _gaq.push(['_trackEvent', 'Reload Button', 'Reload']);
+
       //Reload to the first article with a slide right transition
       index=0;
       App.load('Perez1', articleData[index], 'slide-right', function () { //This is a callback:)
@@ -92,6 +95,7 @@ App.populator('Perez1', function (page, article) {
 
     //* Adding the article for sending via Kik
     $(page).find('#kik').on('click', function (){
+     _gaq.push(['_trackEvent', 'Kik', 'Send']);
      var j = slideviewer.page(); //index to current page not i
      var kikTitle = $('<div />').html(articleData[j].title).text();
      var kikDescription = $('<div />').html(articleData[j].description).text();
@@ -124,6 +128,7 @@ App.populator('Perez1', function (page, article) {
     var head = $('<div />').html(articleData[i].title); //Need HTML to remove 'escape entities'
     heading.text(head.text());
     heading.clickable().on('click', function (){
+      _gaq.push(['_trackEvent', 'tapTitle', 'OpenTitle']);
       cards.browser.open(articleData[i].link); //Click the headline, open article URL
     });
     heading.css('padding',10);
@@ -156,6 +161,7 @@ App.populator('Perez1', function (page, article) {
     //Find all the links in the description and override default click behaviour
     //Think of the bug on iPhone when it would fail to load the card after click
     descr.find('a').on('click', function(e){
+      _gaq.push(['_trackEvent', 'tapArticleLink', 'OpenLink']);
       e.preventDefault();
       cards.browser.open($(this).attr("href"));
     }); 
@@ -172,7 +178,8 @@ App.populator('Perez1', function (page, article) {
 
     // For all images in description, make them clickable to the article
     descr.find('img').clickable().on('click', function (){
-          cards.browser.open(articleData[i].link); //Click the image, open article URL
+      _gaq.push(['_trackEvent', 'tapImage', 'OpenImage']);
+      cards.browser.open(articleData[i].link); //Click the image, open article URL
     });
     articleSection.append(descr);
     //Actually append all the article elements
@@ -207,6 +214,8 @@ App.populator('Perez1', function (page, article) {
 // This should not depend on index for positioning
 // ----------------
 App.populator('fromKikPerez', function (page, linkData) {
+  _gaq.push(['_trackEvent', 'openFromKik', 'OpenKik']);
+
   // If on Android and opening from a Kik message, handle the back button
   var os = cards.utils.platform.os;
   if (os.name === 'android'){
