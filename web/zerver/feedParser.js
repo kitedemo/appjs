@@ -5,6 +5,7 @@ var redis = require('redis-url')
 
 var masterArticles = [];
 var defaultArticles;
+var CACHE_EXPIRE = 1 * 7 * 24 * 60 * 60; // One week
 
 function init () {
   var fp       = require('feedparser'),
@@ -42,7 +43,7 @@ function init () {
     }
   }
 
-  //Initializing the app with 30 articles
+  //Initializing the app with 100 articles
   fp.parseUrl('http://perezhilton.com/cocoperez/page/5/?feed=atom').on('article', add);
   fp.parseUrl('http://i.perezhilton.com/page/5/?feed=atom').on('article', add);
   fp.parseUrl('http://perezhilton.com/cocoperez/page/4/?feed=atom').on('article', add);
