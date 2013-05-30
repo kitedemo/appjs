@@ -6,10 +6,10 @@
 
 
 
-/* Initializes the google analytics script after window.onload */
+/* Initializes the google analytics script after cards.ready */
 (function (w, d) {
 
-	// create _gaq early so we can setup events
+	// Create _gaq early so we can setup events
 
 	var _gaq = w._gaq = [];
 	_gaq.push(['_setAccount', 'UA-40353233-1']);
@@ -30,13 +30,8 @@
 	}, false);
 
 	// track load time and Cards.js related metrics
-	if (cards.metrics && cards.metrics.enableGoogleAnalytics) {
-		cards.metrics.enableGoogleAnalytics();
-	}
-
-	if (App.enableGoogleAnalytics) {
-		App.enableGoogleAnalytics();
-	}
+	cards.metrics.enableGoogleAnalytics();
+	App.enableGoogleAnalytics();
 
 	// wait until all other assets are loaded to not block pageLoaded
 	cards.ready(function () {
