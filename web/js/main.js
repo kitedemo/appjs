@@ -125,6 +125,11 @@ App.populator('Have You Heard?', function (page, article) {
       // ----------------
       // Description (includes Article Image)
       // ----------------
+      if (articleData[i].content.indexOf('<!--more-->') > 0){
+        //console.log(articleData[i].content);
+        //console.log(articleData[i].content.indexOf('<!--more-->'));
+        articleData[i].content = articleData[i].content.substr(0, articleData[i].content.indexOf('<!--more-->'));
+      }
       var descr = $('<div />').html(articleData[i].content);
 
       //Custom Content Fix -Finds all the 'children' without images ie. (<p>), adds padding to the text
@@ -158,7 +163,10 @@ App.populator('Have You Heard?', function (page, article) {
       if (descr.find('img').length === 0){
         var imgs = new Image();
         imgs.src = 'img/image_not_available_noun.svg';
-        $(descr).prepend(imgs);
+        $(descr).find('p').first().prepend(imgs);
+        var tempImg = $(imgs);
+        tempImg.css('width', '50%');
+        tempImg.css('margin-left', '25%');
       }     
 
       //Update content with all the custom items
