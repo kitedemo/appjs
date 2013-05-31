@@ -9,7 +9,7 @@ var length;
 
 App.populator('Perez1', function (page, article) {
 
-  // When card.ready / not blocking DOM Load, fetch articles from PerezHilton.com and store them
+  // When card.ready / not blocking DOM Load, fetch articles and store them
   cards.ready(function () {
     feedParser.getArticles(function (articles){ //Actually fetches the articles
       articles = articles.sort(function (a, b) { //Sort articles by issued time
@@ -68,7 +68,6 @@ App.populator('Perez1', function (page, article) {
     // ----------------
     // "Kik" Button
     // ----------------
-    //* Adding the article for sending via Kik
     $(page).find('#kik').on('click', function (){
      _gaq.push(['_trackEvent', 'KikArticle', 'Send']);
      var j = slideviewer.page(); //index to current page not i
@@ -86,12 +85,12 @@ App.populator('Perez1', function (page, article) {
       });
     });
 
+    // ----------------
+    // "Create SlideViewer"
+    // ----------------
     var wrapper = page.querySelector('.wrapper');
     wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
-      
-    //Create Slideview
     var size = articleData.length;
-    // console.log(articleData);
     var slideviewer = new SlideViewer(wrapper, source, {
       startAt: 0,
       length: size
@@ -107,25 +106,24 @@ App.populator('Perez1', function (page, article) {
     function source(i) {
     var article = $('<div />');
     article.css('height', '100%');
-
     var articleSection = $('<div />');
     articleSection.addClass('app-section');
 
     // ----------------
-    // Article Heading Section
+    // Headline
     // ----------------
     var heading = $('<h2 />');
-    var head = $('<div />').html(articleData[i].title); //Need HTML to remove 'escape entities'
+    var head = $('<div />').html(articleData[i].title); //Use HTML to remove 'escape entities'
     heading.text(head.text());
     heading.clickable().on('click', function (){
       _gaq.push(['_trackEvent', 'tappedOnTitle', 'OpenTitle']);
-      cards.browser.open(articleData[i].link); //Click the headline, open article URL
+      cards.browser.open(articleData[i].link);
     });
     heading.css('padding',10);
     articleSection.append(heading);
 
     // ----------------
-    // Article Description Section including the Image
+    // Description (includes Article Image)
     // ----------------
     var descr = $('<div />').html(articleData[i].content);
     //Finds all the 'children' without an image (<p>) in the description, adds padding to the text
