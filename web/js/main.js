@@ -7,7 +7,7 @@ var articleData = [];
 var index = 0;
 var length;
 
-App.populator('Perez1', function (page, article) {
+App.populator('Have You Heard?', function (page, article) {
 
   // When card.ready / not blocking DOM Load, fetch articles and store them
   cards.ready(function () {
@@ -57,7 +57,7 @@ App.populator('Perez1', function (page, article) {
     reload.clickable().on('click', function (){
       _gaq.push(['_trackEvent', 'tappedReloadButton', 'Reload']);
       index=0;
-      App.load('Perez1', articleData[index], 'slide-right', function () {
+      App.load('Have You Heard?', articleData[index], 'slide-right', function () {
         try {
           App.removeFromStack(0); //When done loading new Perez1, remove old from the backstack
         }
@@ -103,6 +103,7 @@ App.populator('Perez1', function (page, article) {
     // Creates the content page
     // ----------------
     function source(i) {
+      _gaq.push(['_trackEvent', 'flipped', 'Flipped']);
       var article = $('<div />');
       article.css('height', '100%');
       var articleSection = $('<div />');
@@ -224,7 +225,7 @@ App.populator('fromKikPerez', function (page, linkData) {
   $(page).find('#home').on('click', function () {
     _gaq.push(['_trackEvent', 'closeFromKik', 'closeFromKik']);
     index=0;
-    App.load('Perez1', articleData[index], 'slideoff-down', function () { //This is a callback:)
+    App.load('Have You Heard?', articleData[index], 'slideoff-down', function () { //This is a callback:)
       //When done loading new Perez1, remove from the backstack
       try {
         App.removeFromStack(0);
@@ -287,5 +288,5 @@ if (cards.browser && cards.browser.linkData) {
 // Otherwise use default UI - Have You Heard? 
 // ----------------
 else {
-    App.load('Perez1', articleData[0]);
+    App.load('Have You Heard?', articleData[0]);
 }
