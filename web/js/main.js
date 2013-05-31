@@ -15,26 +15,29 @@ App.populator('Perez1', function (page, article) {
       articles = articles.sort(function (a, b) { //Sort articles by issued time
         return (b.issued-a.issued);
       });
-      console.log('Total number of current articles ' + articles.length);
+      console.log('Total number of current articles: ' + articles.length);
       console.log(articles);
 
-      // If articles exist/we can fetch them, stores a set of articles for offline mode
-      if (articles){
-        Store.set('articles', articles);
-      }
-      else{
-        //If we can't fetch articles/DNE,  then we should retrieve them from the cache
-        articles = Store.get('articles');
-      }
-      // TO DO: Why can't this be above? 
+      // If articles exist/can fetch, store for offline mode
       if (articles){
         articleData = articles;
         index = articleData[index].index;  
         addContent();
+        
+        Store.set('articles', articles);
       }
-     else {
-      // TO DO: Add network error state here
-     }
+      else{
+        //If can't fetch articles/DNE,  retrieve from cache
+        articles = Store.get('articles');
+      }
+     //  if (articles){
+     //    articleData = articles;
+     //    index = articleData[index].index;  
+     //    addContent();
+     //  }
+     // else {
+     //  // TO DO: Add network error state here
+     // }
     }).error(function(){
       //Went to db but couldn't get articles from it, so serve cached articles 
       var articles = Store.get('articles');
