@@ -18,14 +18,17 @@ App.populator('Perez1', function (page, article) {
         //console.log(articles.length);
 
         // Try and sort the articles based on issued time
-         articles = articles.sort(function (a, b) {
-          return (b.issued-a.issued);
-         });
-         console.log(articles.length);
-         console.log(articles);
+         // articles = articles.sort(function (a, b) {
+         //  return (b.issued-a.issued);
+         // });
+         // console.log(articles.length);
+         // console.log(articles);
 
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
+        articles = articles.sort(function (a, b) {
+         return (b.issued-a.issued);
+        });
         Store.set('articles', articles);
       }
       else{
@@ -34,6 +37,9 @@ App.populator('Perez1', function (page, article) {
       }
       // TO DO: Why can't this be above? 
       if (articles){
+        articles = articles.sort(function (a, b) {
+         return (b.issued-a.issued);
+        });
         articleData = articles;
         index = articleData[index].index;  
         addContent();
@@ -144,7 +150,7 @@ App.populator('Perez1', function (page, article) {
     //Adds default image to articles that have videos in <span> tags
     if (descr.find('span').length){
       var imgs = $('<img />');
-      imgs.attr('src', 'img/pink_video_noun.svg');
+      imgs.attr('src', 'img/pink_video_noun.png');
       imgs.addClass('centeredImage');
       descr.find('span').replaceWith(imgs);
       imgs.parent().css('text-align', 'center');

@@ -5,9 +5,8 @@ img/pink_flower2.gif?inline=1
 img/image_not_available_noun.png
 img/x.png
 img/retry_icon@2x.png
-img/pink_video_noun.svg
+img/pink_video_noun.png
 
-NETWORK:
 http://cdn.kik.com/cards/0/cards.js
 
 # zerver:js/main.min.js
@@ -29,4 +28,5 @@ css/default.css
 css/christine.css
 # /zerver
 
+NETWORK:
 *
