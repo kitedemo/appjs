@@ -67,7 +67,7 @@ App.populator('Perez1', function (page, article) {
     $(page).find('.app-topbar').append(reload);
     reload.clickable().on('click', function (){
       //Track the reload event
-      _gaq.push(['_trackEvent', 'Reload Button', 'Reload']);
+      _gaq.push(['_trackEvent', 'tappedReloadButton', 'Reload']);
 
       //Reload to the first article with a slide right transition
       index=0;
@@ -95,7 +95,7 @@ App.populator('Perez1', function (page, article) {
 
     //* Adding the article for sending via Kik
     $(page).find('#kik').on('click', function (){
-     _gaq.push(['_trackEvent', 'Kik', 'Send']);
+     _gaq.push(['_trackEvent', 'KikArticle', 'Send']);
      var j = slideviewer.page(); //index to current page not i
      var kikTitle = $('<div />').html(articleData[j].title).text();
      var kikDescription = $('<div />').html(articleData[j].description).text();
@@ -128,7 +128,7 @@ App.populator('Perez1', function (page, article) {
     var head = $('<div />').html(articleData[i].title); //Need HTML to remove 'escape entities'
     heading.text(head.text());
     heading.clickable().on('click', function (){
-      _gaq.push(['_trackEvent', 'tapTitle', 'OpenTitle']);
+      _gaq.push(['_trackEvent', 'tappedOnTitle', 'OpenTitle']);
       cards.browser.open(articleData[i].link); //Click the headline, open article URL
     });
     heading.css('padding',10);
@@ -161,7 +161,7 @@ App.populator('Perez1', function (page, article) {
     //Find all the links in the description and override default click behaviour
     //Think of the bug on iPhone when it would fail to load the card after click
     descr.find('a').on('click', function(e){
-      _gaq.push(['_trackEvent', 'tapArticleLink', 'OpenLink']);
+      _gaq.push(['_trackEvent', 'tappedArticleLink', 'OpenLink']);
       e.preventDefault();
       cards.browser.open($(this).attr("href"));
     }); 
