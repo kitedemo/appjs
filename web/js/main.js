@@ -99,96 +99,92 @@ App.populator('Perez1', function (page, article) {
       slideviewer.refreshSize();
     })
 
-
     // ----------------
     // Creates the content page
     // ----------------
     function source(i) {
-    var article = $('<div />');
-    article.css('height', '100%');
-    var articleSection = $('<div />');
-    articleSection.addClass('app-section');
+      var article = $('<div />');
+      article.css('height', '100%');
+      var articleSection = $('<div />');
+      articleSection.addClass('app-section');
 
-    // ----------------
-    // Headline
-    // ----------------
-    var heading = $('<h2 />');
-    var head = $('<div />').html(articleData[i].title); //Use HTML to remove 'escape entities'
-    heading.text(head.text());
-    heading.clickable().on('click', function (){
-      _gaq.push(['_trackEvent', 'tappedOnTitle', 'OpenTitle']);
-      cards.browser.open(articleData[i].link);
-    });
-    heading.css('padding',10);
-    articleSection.append(heading);
+      // ----------------
+      // Headline
+      // ----------------
+      var heading = $('<h2 />');
+      var head = $('<div />').html(articleData[i].title); //Use HTML to remove 'escape entities'
+      heading.text(head.text());
+      heading.clickable().on('click', function (){
+        _gaq.push(['_trackEvent', 'tappedOnTitle', 'OpenTitle']);
+        cards.browser.open(articleData[i].link);
+      });
+      heading.css('padding',10);
+      articleSection.append(heading);
 
-    // ----------------
-    // Description (includes Article Image)
-    // ----------------
-    var descr = $('<div />').html(articleData[i].content);
-    //Finds all the 'children' without an image (<p>) in the description, adds padding to the text
-    descr.children().not(descr.children().has('img')).css('padding',10);
+      // ----------------
+      // Description (includes Article Image)
+      // ----------------
+      var descr = $('<div />').html(articleData[i].content);
 
-    //Adds default image to articles that have videos in <span> tags
-    if (descr.find('span').length){
-      var imgs = $('<img />');
-      imgs.attr('src', 'img/pink_video_noun.svg');
-      imgs.addClass('centeredImage');
-      descr.find('span').replaceWith(imgs);
-      imgs.parent().css('text-align', 'center');
-    }
+      //Custom Content Fix -Finds all the 'children' without images ie. (<p>), adds padding to the text
+      descr.children().not(descr.children().has('img')).css('padding',10);
 
-    //Scale the Embedded YouTube video to fit the page
-    descr.find('iframe').width('100%').height('56%');
+      //Custom Content Fix - Adds default image to articles that have videos in <span> tags
+      if (descr.find('span').length){
+        var imgs = $('<img />');
+        imgs.attr('src', 'img/pink_video_noun.svg');
+        imgs.addClass('centeredImage');
+        descr.find('span').replaceWith(imgs);
+        imgs.parent().css('text-align', 'center');
+      }
 
-    //Find all the poll articles and remove form, loading spinners and vote buttons
-    descr.find('.wp-polls-loading').remove();
-    descr.find('.wp-polls form').remove();
-    descr.find('a[href$="#VotePoll"]').remove();
+      //Custom Content Fix - Scale the Embedded YouTube video to fit the page
+      descr.find('iframe').width('100%').height('56%');
 
-    //Find all the links in the description and override default click behaviour
-    //Think of the bug on iPhone when it would fail to load the card after click
-    descr.find('a').on('click', function(e){
-      _gaq.push(['_trackEvent', 'tappedArticleLink', 'OpenLink']);
-      e.preventDefault();
-      cards.browser.open($(this).attr("href"));
-    }); 
+      //Custom Content Fix - Find all the poll articles and remove the poll form, loading spinners and vote buttons
+      descr.find('.wp-polls-loading').remove();
+      descr.find('.wp-polls form').remove();
+      descr.find('a[href$="#VotePoll"]').remove();
 
-    //Adds default image to articles
-    if (descr.find('img').length === 0){
-      var imgs = new Image();
-      imgs.src = 'img/image_not_available_noun.svg';
-      $(descr).prepend(imgs);
-    }
-    
-    // Once all the new images are added, update the content for the article
-    articleData[i].content = descr.html();
+      //Custom Content Fix - Find all the links in the description and override default click behaviour (think iPhone)
+      descr.find('a').on('click', function(e){
+        _gaq.push(['_trackEvent', 'tappedArticleLink', 'OpenLink']);
+        e.preventDefault();
+        cards.browser.open($(this).attr("href"));
+      }); 
 
-    // For all images in description, make them clickable to the article
-    descr.find('img').clickable().on('click', function (){
-      _gaq.push(['_trackEvent', 'tapImage', 'OpenImage']);
-      cards.browser.open(articleData[i].link); //Click the image, open article URL
-    });
-    articleSection.append(descr);
-    //Actually append all the article elements
-    article.append(articleSection);
+      //Custom Content Fix - Adds default image to articles
+      if (descr.find('img').length === 0){
+        var imgs = new Image();
+        imgs.src = 'img/image_not_available_noun.svg';
+        $(descr).prepend(imgs);
+      }     
 
-    if ( (App.platform === 'android' && App.platformVersion >= 4) || (App.platform ==='ios' && (App.platformVersion>=5 && App.platformVersion <6))) {
-      // For Android > ICS touch events are eaten on some slide viewer pages
-      // Also iOS5 has issues with List Scrolling, have to use iScroll
-      article.scrollable(true); 
-    }
-    else{
-      article.scrollable();
-    }
+      //Update content with all the custom items
+      articleData[i].content = descr.html();
+
+      //All images should be clickable
+      descr.find('img').clickable().on('click', function (){
+        _gaq.push(['_trackEvent', 'tapImage', 'OpenImage']);
+        cards.browser.open(articleData[i].link);
+      });
+      articleSection.append(descr);
+      article.append(articleSection);
+
+      //Slideviewer Fix - Android > ICS touch events are consumed on some slide viewer pages + iOS5 List Scrolling, have to use iScroll
+      if ( (App.platform === 'android' && App.platformVersion >= 4) || (App.platform ==='ios' && (App.platformVersion>=5 && App.platformVersion <6))) {
+        article.scrollable(true); 
+      }
+      else{
+        article.scrollable();
+      }
     return article[0];
     }
   }
-}, function (page, article) {// Destructor for Perez
+}, function (page, article) {// Destructor for Perez1
   var os = cards.utils.platform.os;
   if (os.name === 'android'){
-    //Once you dismiss the fromKikPerez viewer we don't want to return to
-    //the previous conversation, so need to unbindBack
+    //After dismissing fromKikPerez don't return conversations, need to unbind physical back button
     cards.browser.unbindBack(handleBackButton);
   }
 });
@@ -198,32 +194,35 @@ App.populator('Perez1', function (page, article) {
 
 // ----------------
 // fromKikPerez Viewer
-// If opened from a Kik message the article may not be in the top 10
-// This should not depend on index for positioning
 // ----------------
 App.populator('fromKikPerez', function (page, linkData) {
   _gaq.push(['_trackEvent', 'openFromKik', 'OpenKik']);
 
-  // If on Android and opening from a Kik message, handle the back button
+  //Android - Open from a Kik message, handle the back button
   var os = cards.utils.platform.os;
   if (os.name === 'android'){
     cards.browser.back(handleBackButton);  
   }
 
-  //* Same UI as the Perez slide viewer page
+  // ----------------
+  // fromKikPerez Viewer - Same UI as PerezViewer
+  // ----------------
   $(page).find('#headline').html(linkData.title);
   var descr = $('<div />').html(linkData.content);
   $(page).find('#story').append(descr);
   $(page).find('#headline').clickable().on('click', function () {
+    _gaq.push(['_trackEvent', 'tappedOnTitleFromKik', 'OpenTitleFromKik']);
     cards.browser.open(linkData.link); 
   });
   var img = descr.find('img');
   $(img).clickable().on('click', function () {
+    _gaq.push(['_trackEvent', 'tapImageFromKik', 'OpenImageFromKik']);
     cards.browser.open(articleData[index].link); 
   });
 
   //Since opened from a Kik, no slide viewer, thus force user to go 'Home'
   $(page).find('#home').on('click', function () {
+    _gaq.push(['_trackEvent', 'closeFromKik', 'closeFromKik']);
     index=0;
     App.load('Perez1', articleData[index], 'slideoff-down', function () { //This is a callback:)
       //When done loading new Perez1, remove from the backstack
@@ -236,6 +235,7 @@ App.populator('fromKikPerez', function (page, linkData) {
 
   //Able to send article via Kik again
   $(page).find('#kik').on('click', function () {
+    _gaq.push(['_trackEvent', 'KikedFromKik', 'KikedFromKik']);
     var fromKikTitle = $('<div />').html(linkData.title).text();
     var fromKikDescription = $('<div />').html(linkData.description).text();
     var fromKikImg = $('<div />').html(linkData.content).find('img').attr('src');
@@ -251,13 +251,16 @@ App.populator('fromKikPerez', function (page, linkData) {
   });
 }, function(page, linkData){ //Destructor for the fromKikPerez Populator
     if (App.platform === 'android'){
-      //Once you dismiss the fromKikPerez viewer we don't want to return to
-      //the previous conversation, so need to unbindBack
+      //After dismissing fromKikPerez don't return conversations, need to unbind physical back button
       cards.browser.unbindBack(handleBackButton);
     }
 });
 
-//* If opened on an Android device should handle the physical back button
+
+
+// ----------------
+// Android Only - Handle Physical back button
+// ----------------
 function handleBackButton () {
   if (cards.kik.returnToConversation) {
       // Card was launched by a conversation, return to the Kik convo
@@ -272,12 +275,17 @@ function handleBackButton () {
 //Give a timeout for articles to fetch, if exceeds then get from cache
 ZERVER_TIMEOUT = 15000;
 
-// If opened from a Kik Message then open the "PerezViewer"
+
+// ----------------
+// Open From Kik Message - use fromKikPerez
+// ----------------
 if (cards.browser && cards.browser.linkData) {
   // Card was launched by a conversation
   App.load('fromKikPerez', cards.browser.linkData);
 }
-//Otherwise use default Perez
+// ----------------
+// Otherwise use default UI - Have You Heard? 
+// ----------------
 else {
     App.load('Perez1', articleData[0]);
 }

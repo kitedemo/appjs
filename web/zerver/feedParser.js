@@ -14,9 +14,8 @@ function init () {
       index    = 0;
 
   function add (article) {
-
-    //console.log(JSON.stringify(article));
-    // Make an Article object, add it to an array
+    //console.log(JSON.stringify(article)); //This is how you view article objects before I parse them
+    //Make an Article object, add it to an array
     var obj     = {};
     obj.index   = index;
     obj.timestamp = +new Date() - index; //Adding a unique timestamp to each article
@@ -92,8 +91,7 @@ function updateArticles () {
 }
 
 function startArticleUpdating () {  
-  redis.get('articles', function (err, jsonArticles) {
-    
+  redis.get('articles', function (err, jsonArticles) {    
     // if (!err && jsonArticles) {
     //   console.log("ping");
     //   var fromAtomArticles;
@@ -105,8 +103,7 @@ function startArticleUpdating () {
     //     console.log("masterArticles set");
     //     masterArticles = fromAtomArticles;
     //   }
-    // }
-    
+    // }   
     // Fetch new articles every 15 mins
     setInterval(updateArticles, 15 * 60 * 1000);
     updateArticles();
