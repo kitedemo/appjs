@@ -31,13 +31,13 @@ App.populator('Perez1', function (page, article) {
         articles = Store.get('articles');
       }
     }).error(function(){
-      //Went to db but couldn't get articles from it, so serve cached articles 
+      //Went to db but couldn't retrieve articles from it, serve cached articles 
       var articles = Store.get('articles');
       if (articles){
         articleData = articles;
         index = articleData[index].index;  
         addContent();
-     }
+      }
       else{
         //TO DO: Add network error state here
      }
@@ -49,39 +49,25 @@ App.populator('Perez1', function (page, article) {
   // ----------------
   function addContent (){
     // ----------------
-    // "Reload" button
+    // "Reload" Button -  Load articles again with a slide right transition
     // ----------------
     var reload = $('<div />');
     reload.addClass('app-button reload');
     $(page).find('.app-topbar').append(reload);
     reload.clickable().on('click', function (){
-      //Track the reload event
       _gaq.push(['_trackEvent', 'tappedReloadButton', 'Reload']);
-
-      //Reload to the first article with a slide right transition
       index=0;
-      App.load('Perez1', articleData[index], 'slide-right', function () { //This is a callback:)
-        //When done loading new Perez1, remove from the backstack
+      App.load('Perez1', articleData[index], 'slide-right', function () {
         try {
-          App.removeFromStack(0);
+          App.removeFromStack(0); //When done loading new Perez1, remove old from the backstack
         }
         catch (err) {}
       });
-     });
-    var wrapper = page.querySelector('.wrapper');
-    wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
-      
-    //Create Slideview
-    var size = articleData.length;
-    // console.log(articleData);
-    var slideviewer = new SlideViewer(wrapper, source, {
-      startAt: 0,
-      length: size
     });
-    page.addEventListener('appLayout', function () {
-      slideviewer.refreshSize();
-    })
 
+    // ----------------
+    // "Kik" Button
+    // ----------------
     //* Adding the article for sending via Kik
     $(page).find('#kik').on('click', function (){
      _gaq.push(['_trackEvent', 'KikArticle', 'Send']);
@@ -99,6 +85,21 @@ App.populator('Perez1', function (page, article) {
         linkData : kikLinkData
       });
     });
+
+    var wrapper = page.querySelector('.wrapper');
+    wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
+      
+    //Create Slideview
+    var size = articleData.length;
+    // console.log(articleData);
+    var slideviewer = new SlideViewer(wrapper, source, {
+      startAt: 0,
+      length: size
+    });
+    page.addEventListener('appLayout', function () {
+      slideviewer.refreshSize();
+    })
+
 
     // ----------------
     // Creates the content page
