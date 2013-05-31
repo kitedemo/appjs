@@ -17,12 +17,12 @@ App.populator('Perez1', function (page, article) {
         //console.log(articles);
         //console.log(articles.length);
 
-        // Try and sort the articles based on issued time
-         // articles = articles.sort(function (a, b) {
-         //  return (b.issued-a.issued);
-         // });
-         // console.log(articles.length);
-         // console.log(articles);
+        //Try and sort the articles based on issued time
+         articles = articles.sort(function (a, b) {
+          return (b.issued-a.issued);
+         });
+         console.log(articles.length);
+         console.log(articles);
 
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
