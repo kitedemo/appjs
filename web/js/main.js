@@ -22,29 +22,21 @@ App.populator('Perez1', function (page, article) {
       if (articles){
         articleData = articles;
         index = articleData[index].index;  
-        addContent();
-        
+        addContent(); 
+
         Store.set('articles', articles);
       }
       else{
         //If can't fetch articles/DNE,  retrieve from cache
         articles = Store.get('articles');
       }
-     //  if (articles){
-     //    articleData = articles;
-     //    index = articleData[index].index;  
-     //    addContent();
-     //  }
-     // else {
-     //  // TO DO: Add network error state here
-     // }
     }).error(function(){
       //Went to db but couldn't get articles from it, so serve cached articles 
       var articles = Store.get('articles');
       if (articles){
         articleData = articles;
-       index = articleData[index].index;  
-       addContent();
+        index = articleData[index].index;  
+        addContent();
      }
       else{
         //TO DO: Add network error state here
@@ -141,7 +133,7 @@ App.populator('Perez1', function (page, article) {
     //Adds default image to articles that have videos in <span> tags
     if (descr.find('span').length){
       var imgs = $('<img />');
-      imgs.attr('src', 'img/pink_video_noun.png');
+      imgs.attr('src', 'img/pink_video_noun.svg');
       imgs.addClass('centeredImage');
       descr.find('span').replaceWith(imgs);
       imgs.parent().css('text-align', 'center');
@@ -166,7 +158,7 @@ App.populator('Perez1', function (page, article) {
     //Adds default image to articles
     if (descr.find('img').length === 0){
       var imgs = new Image();
-      imgs.src = 'img/image_not_available_noun.png';
+      imgs.src = 'img/image_not_available_noun.svg';
       $(descr).prepend(imgs);
     }
     
