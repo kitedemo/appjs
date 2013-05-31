@@ -1,34 +1,25 @@
+// ----------------
+// Default UI for Perez
+// ----------------
+
 // Global Variables
 var articleData = [];
 var index = 0;
 var length;
 
-// ----------------
-// Default UI for Perez
-//
-// ----------------
 App.populator('Perez1', function (page, article) {
 
-  // Once the card is ready - not blocking DOM Load, pull content from PerezHilton.com 
-  // Create an array of article objects
+  // When card.ready / not blocking DOM Load, fetch articles from PerezHilton.com and store them
   cards.ready(function () {
-
-      feedParser.getArticles(function (articles){
-        //console.log(articles);
-        //console.log(articles.length);
-
-        //Try and sort the articles based on issued time
-         articles = articles.sort(function (a, b) {
-          return (b.issued-a.issued);
-         });
-         console.log(articles.length);
-         console.log(articles);
+    feedParser.getArticles(function (articles){ //Actually fetches the articles
+      articles = articles.sort(function (a, b) { //Sort articles by issued time
+        return (b.issued-a.issued);
+      });
+      console.log('Total number of current articles ' + articles.length);
+      console.log(articles);
 
       // If articles exist/we can fetch them, stores a set of articles for offline mode
       if (articles){
-        articles = articles.sort(function (a, b) {
-         return (b.issued-a.issued);
-        });
         Store.set('articles', articles);
       }
       else{
@@ -37,9 +28,6 @@ App.populator('Perez1', function (page, article) {
       }
       // TO DO: Why can't this be above? 
       if (articles){
-        articles = articles.sort(function (a, b) {
-         return (b.issued-a.issued);
-        });
         articleData = articles;
         index = articleData[index].index;  
         addContent();
