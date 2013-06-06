@@ -99,7 +99,7 @@ App.populator('Have You Heard?', function (page, article) {
         linkData : kikLinkData
       });
     });
-    
+
     // ----------------
     // Creates the content page
     // ----------------
@@ -139,7 +139,7 @@ App.populator('Have You Heard?', function (page, article) {
       //Custom Content Fix - Adds default image to articles that have videos in <span> tags
       if (descr.find('span').length){
         var imgs = $('<img />');
-        imgs.attr('src', 'img/pink_video_noun.svg');
+        imgs.attr('src', 'img/pink_video_noun.png');
         imgs.addClass('centeredImage');
         descr.find('span').replaceWith(imgs);
         imgs.parent().css('text-align', 'center');
@@ -163,7 +163,7 @@ App.populator('Have You Heard?', function (page, article) {
       //Custom Content Fix - Adds default image to articles
       if (descr.find('img').length === 0){
         var imgs = new Image();
-        imgs.src = 'img/image_not_available_noun.svg';
+        imgs.src = 'img/image_not_available_noun.png';
         $(descr).find('p').first().prepend(imgs);
         var tempImg = $(imgs);
         tempImg.css('width', '50%');
