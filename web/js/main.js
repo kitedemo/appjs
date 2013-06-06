@@ -66,6 +66,21 @@ App.populator('Have You Heard?', function (page, article) {
     });
 
     // ----------------
+    // "Create SlideViewer"
+    // ----------------
+    var wrapper = page.querySelector('.wrapper');
+    wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
+    var size = articleData.length;
+    var slideviewer = new SlideViewer(wrapper, source, {
+      startAt: 0,
+      length: size
+    });
+    page.addEventListener('appLayout', function () {
+      slideviewer.refreshSize();
+    })
+
+
+    // ----------------
     // "Kik" Button
     // ----------------
     $(page).find('#kik').on('click', function (){
@@ -84,21 +99,7 @@ App.populator('Have You Heard?', function (page, article) {
         linkData : kikLinkData
       });
     });
-
-    // ----------------
-    // "Create SlideViewer"
-    // ----------------
-    var wrapper = page.querySelector('.wrapper');
-    wrapper.innerHTML=''; //Tears down the wrapper to remove default spinner state
-    var size = articleData.length;
-    var slideviewer = new SlideViewer(wrapper, source, {
-      startAt: 0,
-      length: size
-    });
-    page.addEventListener('appLayout', function () {
-      slideviewer.refreshSize();
-    })
-
+    
     // ----------------
     // Creates the content page
     // ----------------
