@@ -1,3 +1,5 @@
+var MAX_STORED_ARTICLES = 1000;
+
 var redis = require('redis-url')
         .connect(process.env.REDISTOGO_URL)
         //.connect('redis://localhost:6379')
@@ -86,7 +88,7 @@ function updateArticles () {
       }
     }
 
-    redis.set('articles', JSON.stringify(masterArticles));
+    redis.set('articles', JSON.stringify(masterArticles.slice(0,MAX_STORED_ARTICLES)));
   });
 }
 
