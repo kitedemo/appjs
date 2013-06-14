@@ -83,7 +83,10 @@ App.populator('Have You Heard?', function (page, article) {
     // ----------------
     // "Kik" Button
     // ----------------
-    $(page).find('#kik').on('click', function (){
+    var kikButton = $('<div />');
+    kikButton.addClass('app-button kik');
+    $(page).find('.app-topbar').append(kikButton);
+    kikButton.clickable().on('click', function (){
      _gaq.push(['_trackEvent', 'KikArticle', 'Send']);
      var j = slideviewer.page(); //index to current page not i
      var kikTitle = $('<div />').html(articleData[j].title).text();

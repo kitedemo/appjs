@@ -94,9 +94,27 @@
 	height: 100%;
 	width: 47px;
 	background-image: url(../img/retry_icon@2x.png);
-	background-position: 8px center;
+	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 40% 40%;
+	color: transparent;
+	-webkit-box-shadow: none;;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border: none;
+}
+
+/* - KIK Button in the top bar*/ 
+.app-page .app-topbar .app-button.kik{
+	right: 0;
+	padding: 0;
+	width: 50px;
+	background-image: url(../img/kik.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 60% 60%;
 	color: transparent;
 	-webkit-box-shadow: none;;
 	-moz-box-shadow: none;
@@ -116,10 +134,15 @@
 	background-color: rgba(0, 0, 0, 0.2);
 }
 
-/*AND - Move App Title a bit so it doesn't overlap with the reload button*/
+/* - RELOAD SELECTED STATE - Change the selected state of the left top bar button*/
+.app-topbar .app-button.kik.active {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+/*AND - Move App Title a bit so it doesn't overlap with the reload button
 .app-android .app-title{
 	padding: 0 12px 0 40px;
-}
+}*/
 
 /******** APP CONTENT ***********/
 
