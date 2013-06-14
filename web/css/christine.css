@@ -210,7 +210,7 @@
 	height: 100%;
 	width: 44px;
 	background-image: url(../img/x.png);
-	background-position: 8px center;
+	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 40% 40%;
 	color: transparent;
@@ -229,7 +229,7 @@
 /* - SELECTED STATE - Change the selected state of the left top bar button*/
 .app-ios .app-topbar.fromKikTopBar  .app-button.active.left {
 	background-image: url(../img/x.png);
-	background-position: 8px center;
+	background-position: center;
 	background-repeat: no-repeat;
 	background-color: rgba(0, 0, 0, 0.2);
 }

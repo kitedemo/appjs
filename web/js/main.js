@@ -247,7 +247,10 @@ App.populator('fromKikPerez', function (page, linkData) {
   });
 
   //Able to send article via Kik again
-  $(page).find('#kik').on('click', function () {
+  var kikButton = $('<div />');
+  kikButton.addClass('app-button kik');
+  $(page).find('.app-topbar').append(kikButton);
+  kikButton.clickable().on('click', function (){
     _gaq.push(['_trackEvent', 'KikedFromKik', 'KikedFromKik']);
     var fromKikTitle = $('<div />').html(linkData.title).text();
     var fromKikDescription = $('<div />').html(linkData.description).text();
