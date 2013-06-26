@@ -15,8 +15,8 @@ App.populator('Have You Heard?', function (page, article) {
       articles = articles.sort(function (a, b) { //Sort articles by issued time
         return (b.issued-a.issued);
       });
-      console.log('Total number of current articles: ' + articles.length);
-      console.log(articles);
+      ;;;console.log('Total number of current articles: ' + articles.length);
+      ;;;console.log(articles);
 
       // If articles exist/can fetch, store for offline mode
       if (articles){
