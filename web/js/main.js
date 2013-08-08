@@ -179,7 +179,6 @@ App.populator('Have You Heard?', function (page, article) {
       //All images should be clickable
       descr.find('img').clickable().on('click', function (){
         _gaq.push(['_trackEvent', 'tapImage', 'OpenImage']);
-        cards.browser.open(articleData[i].link);
       });
       articleSection.append(descr);
       article.append(articleSection);
