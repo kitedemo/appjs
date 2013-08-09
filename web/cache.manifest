@@ -9,11 +9,10 @@ img/retry_icon@2x.png
 img/pink_video_noun.png
 
 # zerver:js/main.min.js
-js/zepto.js
 js/cards.js
+js/zepto.js
 js/store.js
 js/app.js
-zerver/require.js
 zerver/feedParser.js
 js/analytics.js
 js/dispatcher.js
