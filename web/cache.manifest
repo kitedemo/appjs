@@ -14,8 +14,7 @@ js/zepto.js
 js/store.js
 js/app.js
 zerver/feedParser.js
-js/analytics.js
-js/dispatcher.js
+js/analytics.jss
 js/SlideViewer.js
 js/main.js
 # /zerver
