@@ -4,7 +4,7 @@
 /********* TOP BAR ***********/
 /*Pink Top Bar*/
 .app-topbar {
-	background: #FFFF00;
+	background: #FF0000;
 }
 /*AND - TOP BAR - Change to Pink and get rid of the black line under the top bar*/
 .app-android .app-topbar {
@@ -12,7 +12,7 @@
 	-moz-box-shadow: none;
 	box-shadow: none;
 	border: none;
-	background: #FFFF00;
+	background: #FF0000;
 }
 /*iOS - TOP BAR - Change to Pink*/
 .app-ios .app-topbar {
@@ -20,7 +20,7 @@
 	-moz-box-shadow: none;
 	box-shadow: none;
 	border: none;
-	background: #FFFF00;
+	background: #FF0000;
 	text-shadow: none;
 }
 
