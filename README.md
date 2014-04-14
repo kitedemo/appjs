@@ -1,4 +1,4 @@
-TO DO: [![Live Demo](https://usekite.com/live-demo-button.png)](https://localhost/deploy)
+TO DO: [![Live Demo](https://usekite.com/live-demo-button.png)](https://localhost/deploy) [![Live Demo](https://usekite.com/live-demo-button.png)](https://usekite.com/deploy)
 - Add bottom nav bar with paging buttons, kik and open in web
 - Add photo viewer when you click on an image
 
